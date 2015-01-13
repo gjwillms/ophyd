@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,8 +7,11 @@
     
     <title>User commands and API for ophyd &mdash; ophyd 0.0.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/bootstrap-2.2.1.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/bootstrap-responsive-2.2.1.min.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,51 +26,94 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/bootstrap-2.2.1.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="ophyd 0.0.0 documentation" href="index.html" />
     <link rel="next" title="Scan commands and API for ophyd" href="scan_api.html" />
-    <link rel="prev" title="Welcome to ophyd’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Welcome to ophyd’s documentation!" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="scan_api.html" title="Scan commands and API for ophyd"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to ophyd’s documentation!"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ophyd</a> &raquo;</li> 
-      </ul>
-    </div>  
+<div class="container">
+  
+  <div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+      <a class="brand" href="index.html">ophyd</a>
+      <span class="navbar-text pull-left"><b>0.0.0</b></span>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          
+            <li class="dropdown">
+  <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">User commands and API for ophyd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scan_api.html">Scan commands and API for ophyd</a></li>
+</ul>
+</ul>
+</li>
+            <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">User commands and API for ophyd</a></li>
+</ul>
+</ul>
+</li>
+          
+          
             
+  <li><a href="index.html"
+         title="previous chapter">&laquo; Welcome to ophyd&#8217;s documentation!</a></li>
+  <li><a href="scan_api.html"
+         title="next chapter">Scan commands and API for ophyd &raquo;</a></li>
+          
+          
+            <li>
+  <a href="_sources/cli_api.txt"
+     rel="nofollow">Source</a></li>
+          
+        </ul>
+
+        
+          
+<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+  
   <div class="section" id="module-ophyd.userapi">
 <span id="user-commands-and-api-for-ophyd"></span><h1>User commands and API for ophyd<a class="headerlink" href="#module-ophyd.userapi" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-ophyd.userapi.cli_api"></span><p>Command Line Interface to opyd objects</p>
 <dl class="function">
 <dt id="ophyd.userapi.cli_api.mov">
 <tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">mov</tt><big>(</big><em>positioner</em>, <em>position</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#mov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.mov" title="Permalink to this definition">¶</a></dt>
-<dd><p>Move positioners to given positions</p>
-<p>Move positioners using the move method of the Positioner class.</p>
+<dd><p>Move a positioner to a given position</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>positioner</strong> &#8211; Positioner or list of Positioners to move</li>
-<li><strong>position</strong> &#8211; Values (single or list) to move positioners to.</li>
-<li><strong>quiet</strong> &#8211; If quiet is true then don&#8217;t print to screen.</li>
+<li><strong>positioner</strong> &#8211; A single positioner or a collection of
+positioners to move</li>
+<li><strong>position</strong> &#8211; A single position or a collection of positions.</li>
 </ul>
 </td>
 </tr>
@@ -79,16 +124,16 @@
 <dl class="function">
 <dt id="ophyd.userapi.cli_api.movr">
 <tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">movr</tt><big>(</big><em>positioner</em>, <em>position</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#movr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.movr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Move positioners to given positions</p>
-<p>Move positioners using the move method of the Positioner class.</p>
+<dd><p>Move a positioner to a relative position</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>positioner</strong> &#8211; Positioner or list of Positioners to move</li>
-<li><strong>position</strong> &#8211; Values (single or list) to move positioners to.</li>
-<li><strong>quiet</strong> &#8211; If quiet is true then don&#8217;t print to screen.</li>
+<li><strong>positioner</strong> &#8211; A single positioner or a collection of
+positioners to move</li>
+<li><strong>position</strong> &#8211; A single position or a collection of positions.</li>
+<li><strong>quiet</strong> &#8211; Do not print any output to console.</li>
 </ul>
 </td>
 </tr>
@@ -100,23 +145,15 @@
 <dt id="ophyd.userapi.cli_api.set_pos">
 <tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">set_pos</tt><big>(</big><em>positioner</em>, <em>position</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#set_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.set_pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the position of a positioner</p>
-<p>Set the position of a positioner or positioners to the value position.
-This function only works for EpicsMotors (Based on the EPICS Motor Record)
-and uses the .OFF field to set the current position to the value passed to
-the function.</p>
+<p>Note : Currently this only works for EpicsMotor instances
+:param positioner: A single positioner or a collection of</p>
+<blockquote>
+<div>positioners to move</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>positioner</strong> &#8211; Positioner or list of positioners.</li>
-<li><strong>position</strong> &#8211; New position, or list of positions to set the positioners to.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">TypeError</span></tt> &#8211; 
-If positioner is not an instance of an EpicsMotor.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>position</strong> &#8211; A single position or a collection of positions.</td>
 </tr>
 </tbody>
 </table>
@@ -124,18 +161,14 @@ If positioner is not an instance of an EpicsMotor.</p>
 
 <dl class="function">
 <dt id="ophyd.userapi.cli_api.wh_pos">
-<tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">wh_pos</tt><big>(</big><em>positioners</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#wh_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.wh_pos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the current position of Positioners and print to screen.</p>
-<p>Print to the screen the position of the positioners in a formated table.
-If positioners is None then get all registered positioners from the
-session manager.</p>
+<tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">wh_pos</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#wh_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.wh_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the current position of Positioners</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>positioners</strong> &#8211; Positioner, list of Positioners or None</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Nothing.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>positioners</strong> (<em>Positioner, list of Positioners or None</em>) &#8211; Positioners to output. If None print all
+positioners positions.</td>
 </tr>
 </tbody>
 </table>
@@ -144,45 +177,17 @@ session manager.</p>
 <dl class="function">
 <dt id="ophyd.userapi.cli_api.set_lm">
 <tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">set_lm</tt><big>(</big><em>positioner</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#set_lm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.set_lm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the limits of the positioner</p>
-<p>Sets the limits of the positioner or list of positioners. For EpicsMotors
-the fields .HLM and .LLM are set to the high and low limits respectively.
-For PVPositioners the .DRVH and .DRVL fields are set on the setopoint
-record. If neither method works then an IOError is raised.</p>
+<dd><p>Set the positioner limits</p>
+<p>Note : Currently this only works for EpicsMotor instances
+:param positioner: A single positioner or a collection of</p>
+<blockquote>
+<div>positioners to move</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>positioner</strong> &#8211; A single positioner or a collection of
-positioners to set the limits of.</li>
-<li><strong>limits</strong> &#8211; A single tupple or a collection of tuples for
-the form (+ve, -ve) limits.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">IOError</span></tt> &#8211; 
-If the caput (EPICS put) fails then an IOError is raised.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ophyd.userapi.cli_api.log_pos">
-<tt class="descclassname">ophyd.userapi.cli_api.</tt><tt class="descname">log_pos</tt><big>(</big><em>positioners=None</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/cli_api.html#log_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.cli_api.log_pos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the current position of Positioners and make a logbook entry.</p>
-<p>Print to the screen the position of the positioners and make a logbook
-text entry. If positioners is None then get all registered positioners
-from the session manager.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>positioners</strong> &#8211; Positioner, list of Positioners or None</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ID of the logbook entry returned by the logbook.log method.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>limits</strong> &#8211; A single tupple or a collection of tuples for
+the form (+ve, -ve) limits.</td>
 </tr>
 </tbody>
 </table>
@@ -191,60 +196,18 @@ from the session manager.</p>
 </div>
 
 
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to ophyd&#8217;s documentation!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="scan_api.html"
-                        title="next chapter">Scan commands and API for ophyd</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/cli_api.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="scan_api.html" title="Scan commands and API for ophyd"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to ophyd’s documentation!"
-             >previous</a> |</li>
-        <li><a href="index.html">ophyd</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
-    </div>
+    <p>
+        &copy; Copyright 2014, Brookhaven National Lab.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
   </body>
 </html>

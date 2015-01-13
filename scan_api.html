@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,8 +7,11 @@
     
     <title>Scan commands and API for ophyd &mdash; ophyd 0.0.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/bootstrap-2.2.1.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/bootstrap-responsive-2.2.1.min.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,39 +26,84 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/bootstrap-2.2.1.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="ophyd 0.0.0 documentation" href="index.html" />
-    <link rel="prev" title="User commands and API for ophyd" href="cli_api.html" /> 
+    <link rel="prev" title="User commands and API for ophyd" href="cli_api.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="cli_api.html" title="User commands and API for ophyd"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ophyd</a> &raquo;</li> 
-      </ul>
-    </div>  
+<div class="container">
+  
+  <div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+      <a class="brand" href="index.html">ophyd</a>
+      <span class="navbar-text pull-left"><b>0.0.0</b></span>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          
+            <li class="dropdown">
+  <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli_api.html">User commands and API for ophyd</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Scan commands and API for ophyd</a></li>
+</ul>
+</ul>
+</li>
+            <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">Scan commands and API for ophyd</a></li>
+</ul>
+</ul>
+</li>
+          
+          
             
+  <li><a href="cli_api.html"
+         title="previous chapter">&laquo; User commands and API for ophyd</a></li>
+          
+          
+            <li>
+  <a href="_sources/scan_api.txt"
+     rel="nofollow">Source</a></li>
+          
+        </ul>
+
+        
+          
+<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+  
   <div class="section" id="module-ophyd.userapi">
 <span id="scan-commands-and-api-for-ophyd"></span><h1>Scan commands and API for ophyd<a class="headerlink" href="#module-ophyd.userapi" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-ophyd.userapi.scan_api"></span><dl class="class">
 <dt id="ophyd.userapi.scan_api.AScan">
-<em class="property">class </em><tt class="descclassname">ophyd.userapi.scan_api.</tt><tt class="descname">AScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#AScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.AScan" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ophyd.userapi.scan_api.</tt><tt class="descname">AScan</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#AScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.AScan" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="ophyd.userapi.scan_api.AScan.__call__">
-<tt class="descname">__call__</tt><big>(</big><em>positioners</em>, <em>start</em>, <em>stop</em>, <em>npts</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.__call__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__call__</tt><big>(</big><em>positioners</em>, <em>start</em>, <em>stop</em>, <em>npts</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run Scan</p>
 </dd></dl>
 
@@ -135,8 +182,7 @@
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.AScan.check_paths">
 <tt class="descname">check_paths</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.check_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the paths against any limits of positioners</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.AScan.data">
@@ -147,13 +193,13 @@
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.AScan.default_detectors">
 <tt class="descname">default_detectors</tt><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.default_detectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default detectors</p>
+<dd><p>Get the defualt detectors</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.AScan.default_triggers">
 <tt class="descname">default_triggers</tt><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.default_triggers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default triggers</p>
+<dd><p>Get the defualt triggers</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -163,15 +209,10 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="ophyd.userapi.scan_api.AScan.format_command_line">
-<tt class="descname">format_command_line</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.format_command_line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a string representation of the passed arguments</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="ophyd.userapi.scan_api.AScan.format_plot">
 <tt class="descname">format_plot</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.format_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guess the positioners and detectors that the user cares about</p>
+<dd><p>Format the bits of information the user (most likely)
+cares about</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -188,10 +229,21 @@ The list of positioners/detectors to plot on the y axis</li>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.AScan.make_log_entry">
-<tt class="descname">make_log_entry</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.make_log_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format and make a log entry for the scan</p>
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.AScan.paths">
+<tt class="descname">paths</tt><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the paths for the scan</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.AScan.ploty">
+<tt class="descname">ploty</tt><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.ploty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.AScan.positioners">
+<tt class="descname">positioners</tt><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.positioners" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the posiitoners for the scan</p>
 </dd></dl>
 
 <dl class="method">
@@ -201,12 +253,12 @@ The list of positioners/detectors to plot on the y axis</li>
 
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.AScan.pre_scan">
-<tt class="descname">pre_scan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.pre_scan" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pre_scan</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#AScan.pre_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.pre_scan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.AScan.run">
-<tt class="descname">run</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.AScan.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the scan</p>
 </dd></dl>
 
@@ -230,10 +282,10 @@ The list of positioners/detectors to plot on the y axis</li>
 
 <dl class="class">
 <dt id="ophyd.userapi.scan_api.DScan">
-<em class="property">class </em><tt class="descclassname">ophyd.userapi.scan_api.</tt><tt class="descname">DScan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#DScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.DScan" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ophyd.userapi.scan_api.</tt><tt class="descname">DScan</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#DScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.DScan" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="ophyd.userapi.scan_api.DScan.__call__">
-<tt class="descname">__call__</tt><big>(</big><em>positioners</em>, <em>start</em>, <em>stop</em>, <em>npts</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.__call__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__call__</tt><big>(</big><em>positioners</em>, <em>start</em>, <em>stop</em>, <em>npts</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run Scan</p>
 </dd></dl>
 
@@ -312,8 +364,7 @@ The list of positioners/detectors to plot on the y axis</li>
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.DScan.check_paths">
 <tt class="descname">check_paths</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.check_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the paths against any limits of positioners</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.DScan.data">
@@ -324,13 +375,13 @@ The list of positioners/detectors to plot on the y axis</li>
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.DScan.default_detectors">
 <tt class="descname">default_detectors</tt><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.default_detectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default detectors</p>
+<dd><p>Get the defualt detectors</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ophyd.userapi.scan_api.DScan.default_triggers">
 <tt class="descname">default_triggers</tt><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.default_triggers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default triggers</p>
+<dd><p>Get the defualt triggers</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -340,15 +391,10 @@ The list of positioners/detectors to plot on the y axis</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="ophyd.userapi.scan_api.DScan.format_command_line">
-<tt class="descname">format_command_line</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.format_command_line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a string representation of the passed arguments</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="ophyd.userapi.scan_api.DScan.format_plot">
 <tt class="descname">format_plot</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.format_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guess the positioners and detectors that the user cares about</p>
+<dd><p>Format the bits of information the user (most likely)
+cares about</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -365,10 +411,21 @@ The list of positioners/detectors to plot on the y axis</li>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.DScan.make_log_entry">
-<tt class="descname">make_log_entry</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.make_log_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format and make a log entry for the scan</p>
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.DScan.paths">
+<tt class="descname">paths</tt><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the paths for the scan</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.DScan.ploty">
+<tt class="descname">ploty</tt><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.ploty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ophyd.userapi.scan_api.DScan.positioners">
+<tt class="descname">positioners</tt><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.positioners" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the posiitoners for the scan</p>
 </dd></dl>
 
 <dl class="method">
@@ -380,12 +437,12 @@ The list of positioners/detectors to plot on the y axis</li>
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.DScan.pre_scan">
 <tt class="descname">pre_scan</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#DScan.pre_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.pre_scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prescan store starting positions and change paths</p>
+<dd><p>Prescan Compute Paths</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ophyd.userapi.scan_api.DScan.run">
-<tt class="descname">run</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.DScan.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the scan</p>
 </dd></dl>
 
@@ -407,204 +464,21 @@ The list of positioners/detectors to plot on the y axis</li>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="ophyd.userapi.scan_api.Scan">
-<em class="property">class </em><tt class="descclassname">ophyd.userapi.scan_api.</tt><tt class="descname">Scan</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__delattr__">
-<tt class="descname">__delattr__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__delattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__delattr__(&#8216;name&#8217;) &lt;==&gt; del x.name</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.__format__">
-<tt class="descname">__format__</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__format__" title="Permalink to this definition">¶</a></dt>
-<dd><p>default object formatter</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__getattribute__">
-<tt class="descname">__getattribute__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__getattribute__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getattribute__(&#8216;name&#8217;) &lt;==&gt; x.name</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__hash__">
-<tt class="descname">__hash__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__hash__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__hash__() &lt;==&gt; hash(x)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.__reduce__">
-<tt class="descname">__reduce__</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__reduce__" title="Permalink to this definition">¶</a></dt>
-<dd><p>helper for pickle</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.__reduce_ex__">
-<tt class="descname">__reduce_ex__</tt><big>(</big><big>)</big><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
-<dd><p>helper for pickle</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__repr__">
-<tt class="descname">__repr__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__repr__() &lt;==&gt; repr(x)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__setattr__">
-<tt class="descname">__setattr__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__setattr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__setattr__(&#8216;name&#8217;, value) &lt;==&gt; x.name = value</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.__sizeof__">
-<tt class="descname">__sizeof__</tt><big>(</big><big>)</big> &rarr; int<a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__sizeof__" title="Permalink to this definition">¶</a></dt>
-<dd><p>size of object in memory, in bytes</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.__str__">
-<tt class="descname">__str__</tt><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__str__() &lt;==&gt; str(x)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.check_paths">
-<tt class="descname">check_paths</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.check_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.check_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the paths against any limits of positioners</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.data">
-<tt class="descname">data</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the last scanned data set</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.default_detectors">
-<tt class="descname">default_detectors</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.default_detectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.default_detectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default detectors</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.default_triggers">
-<tt class="descname">default_triggers</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.default_triggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.default_triggers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default triggers</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.detectors">
-<tt class="descname">detectors</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.detectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.detectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default detectors for this scan</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.format_plot">
-<tt class="descname">format_plot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.format_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.format_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guess the positioners and detectors that the user cares about</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>plotx</strong> (<em>str</em>) &#8211;
-The default positioners to set as the x axis</li>
-<li><strong>ploty</strong> (<em>list</em>) &#8211;
-The list of positioners/detectors to plot on the y axis</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.post_scan">
-<tt class="descname">post_scan</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.post_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.post_scan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.pre_scan">
-<tt class="descname">pre_scan</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.pre_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.pre_scan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.run">
-<tt class="descname">run</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the scan</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.setup_detectors">
-<tt class="descname">setup_detectors</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.setup_detectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.setup_detectors" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ophyd.userapi.scan_api.Scan.setup_triggers">
-<tt class="descname">setup_triggers</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.setup_triggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.setup_triggers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ophyd.userapi.scan_api.Scan.triggers">
-<tt class="descname">triggers</tt><a class="reference internal" href="_modules/ophyd/userapi/scan_api.html#Scan.triggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ophyd.userapi.scan_api.Scan.triggers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the default triggers for this scan</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="cli_api.html"
-                        title="previous chapter">User commands and API for ophyd</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/scan_api.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="cli_api.html" title="User commands and API for ophyd"
-             >previous</a> |</li>
-        <li><a href="index.html">ophyd</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
-    </div>
+    <p>
+        &copy; Copyright 2014, Brookhaven National Lab.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
   </body>
 </html>
