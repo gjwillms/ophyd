@@ -135,7 +135,10 @@ class OphydObject(object):
         A weakly-referenced callback function was deleted; remove it from
         the subscription list.
         '''
-        self._subs[event_type].remove(ref)
+        try:
+            self._subs[event_type].remove(ref)
+        except (ValueError, KeyError):
+            pass
 
     def subscribe(self, cb, event_type=None, run=True, weak=False):
         '''Subscribe to events this signal group emits
