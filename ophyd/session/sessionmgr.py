@@ -124,7 +124,6 @@ class SessionManager(object):
         if not self.in_ipython:
             return
 
-        config = self.ipy_config
         if not self.autorestore:
             warnings.warn('StoreMagic.autorestore not enabled; variable persistence disabled')
 
@@ -179,8 +178,6 @@ class SessionManager(object):
 
         One ctrl-D stops the scan, two confirms exit
         '''
-
-
         run = self._run_engine
         if run is not None and run.running:
             self.stop_all()
@@ -189,15 +186,15 @@ class SessionManager(object):
             self._ipy_exit()
 
     def _update_registry(self, obj, category):
-        if obj not in self._registry[category] and obj.name is not None:
+        if obj.name is not None and obj not in self._registry[category].values():
             self._registry[category][obj.name] = obj
 
     # TODO: figure out what the policy needs to be here...
     def register(self, obj):
         '''Maintain a dict of positioners and detectors.
 
-           If these objects are loaded via "ipython -i conf_script.py",
-           then they're available in the ipy namespace too.
+        If these objects are loaded via "ipython -i conf_script.py",
+        then they're available in the ipy namespace too.
         '''
         if isinstance(obj, Positioner):
             self._update_registry(obj, 'positioners')
@@ -214,12 +211,12 @@ class SessionManager(object):
             raise TypeError('%s cannot be registered with the session.' % obj)
         return self._logger
 
-    #TODO: should swallow and gracefully notify the user of changes
+    # TODO: should swallow and gracefully notify the user of changes
     def notify_connection(self, msg):
         self._logger.debug('connection notification: %s' % msg)
 
     def stop_all(self):
-        #TODO: fixme - add RunEngines to registry
+        # TODO: fixme - add RunEngines to registry
         if self._run_engine is not None:
             self._run_engine.stop()
 
@@ -231,7 +228,7 @@ class SessionManager(object):
     def get_positioners(self):
         return self._registry['positioners']
 
-    #TODO: should we let this raise a KeyError exception? Probably...
+    # TODO: should we let this raise a KeyError exception? Probably...
     def get_positioner(self, pos):
         return self._registry['positioners'][pos]
 
