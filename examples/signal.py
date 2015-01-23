@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 '''A simple test for :class:`EpicsSignal`'''
 
+from __future__ import print_function
 import time
 
 import config
@@ -27,8 +28,7 @@ def test():
     val = record_field(motor_record, 'VAL')
     rbv = record_field(motor_record, 'RBV')
 
-    rw_signal = EpicsSignal(rbv, write_pv=val)
-                            # put_complete=True)
+    rw_signal = EpicsSignal(rbv, write_pv=val, name='rw_signal')  # put_complete=True)
     rw_signal.subscribe(callback, event_type=rw_signal.SUB_VALUE)
     rw_signal.subscribe(callback, event_type=rw_signal.SUB_SETPOINT)
 
@@ -38,13 +38,30 @@ def test():
     time.sleep(1.)
 
     # You can also create a Python Signal:
-    sig = Signal(name='testing', value=10)
-    logger.info('Python signal: %s' % sig)
+    testing0 = Signal(name='testing0', value=10)
+    logger.info('Python signal: %s' % testing0)
 
     # Even one with a separate setpoint/readback value:
-    sig = Signal(name='testing', value=10, setpoint=2,
-                 separate_readback=True)
-    logger.info('Python signal: %s' % sig)
+    testing1 = Signal(name='testing1', value=10, setpoint=2,
+                      separate_readback=True)
+    logger.info('Python signal: %s' % testing1)
+
+    # NOTE: since rw_signal uses a function here for callbacks, it won't get
+    #       removed from the session manager (and its memory freed - that is,
+    #       garbage collected) unless it is explicitly deleted.
+    #
+    #       Try commenting out the del statement below and seeing how the
+    #       final 'remaining signals in session' line changes in the output.
+    #
+    # NOTE: testing0 and testing1, on the other hand, have no references to
+    #       other Python objects, so they will be removed when this function
+    #       returns
+    #
+    del config.session[rw_signal]
+
 
 if __name__ == '__main__':
     test()
+
+    config.logger.debug('Remaining signals in session: {}'
+                        .format(', '.join(obj.name for obj in config.session)))
