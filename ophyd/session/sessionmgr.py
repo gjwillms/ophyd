@@ -227,11 +227,14 @@ class SessionManager(object):
                 self._logger.debug('Stopped %s' % pos)
 
     def get_positioners(self):
-        return self._registry['positioners']
+        return dict(self._registry['positioners'])
 
     # TODO: should we let this raise a KeyError exception? Probably...
     def get_positioner(self, pos):
-        return self._registry['positioners'][pos]
+        try:
+            return self._registry['positioners'][pos]
+        except KeyError:
+            raise KeyError('{!r} is not in the positioner registry'.format(pos))
 
     def get_current_scan_id(self):
         return self.user_namespace['_scan_id']
@@ -279,7 +282,7 @@ class SessionManager(object):
         try:
             return self.user_namespace[key]
         except KeyError:
-            raise KeyError('{!r} not in the registry or IPython namespace'.format(key))
+            raise KeyError('{!r} is not in the registry or IPython namespace'.format(key))
 
     def __setitem__(self, key, value):
         '''Set the values of registry objects'''
@@ -300,7 +303,7 @@ class SessionManager(object):
             del self.user_namespace[key]
         except KeyError:
             if not obj_found:
-                raise KeyError('{!r} not in the registry or IPython namespace'.format(key))
+                raise KeyError('{!r} is not in the registry or IPython namespace'.format(key))
 
     def __contains__(self, key):
         '''Checks if `key` is either an object name or in the IPython namespace'''
