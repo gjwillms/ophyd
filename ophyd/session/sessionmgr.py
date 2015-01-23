@@ -3,6 +3,7 @@ import signal
 import atexit
 import warnings
 import sys
+import weakref
 
 import epics
 
@@ -57,8 +58,10 @@ class SessionManager(object):
 
         self._logger = logger
         self._run_engine = None
-        self._registry = {'positioners': {}, 'signals': {},
-                          'beamline_config': {}}
+
+        self._registry = {}
+        for key in ['positioners', 'signals', 'beamline_config']:
+            self._registry[key] = weakref.WeakValueDictionary()
 
         self._dispatcher = None
         self._setup_epics()
@@ -297,6 +300,9 @@ class SessionManager(object):
         for category, obj in self._all_objects():
             if key == obj.name or obj is key:
                 del self._registry[category][obj.name]
+
+                obj._session = None
+                obj._ses_logger = None
                 obj_found = True
 
         try:

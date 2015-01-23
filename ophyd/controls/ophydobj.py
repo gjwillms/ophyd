@@ -10,6 +10,7 @@
 from __future__ import print_function
 
 import time
+import weakref
 
 from ..session import register_object
 
@@ -84,7 +85,19 @@ class OphydObject(object):
             pass
         else:
             # Cached kwargs includes sub_type
-            self._run_sub(cb, *args, **kwargs)
+            self._run_sub(cb, *args, **self.__from_weakref_dict(kwargs))
+
+    def __to_weakref_dict(self, d):
+        return {key: weakref.ref(value) if isinstance(value, OphydObject)
+                else value
+                for key, value in d.items()}
+
+    def __from_weakref_dict(self, d):
+        # TODO: objects that were gc'd will be None in kwargs for cached
+        # callbacks
+        return {key: value() if isinstance(value, weakref.ReferenceType)
+                else value
+                for key, value in d.items()}
 
     def _run_subs(self, *args, **kwargs):
         '''Run a set of subscription callbacks
@@ -109,10 +122,18 @@ class OphydObject(object):
 
         # Shallow-copy the callback arguments for replaying the
         # callback at a later time (e.g., when a new subscription is made)
-        self._sub_cache[sub_type] = (tuple(args), dict(kwargs))
+
+        self._sub_cache[sub_type] = (tuple(args), self.__to_weakref_dict(kwargs))
 
         for cb in self._subs[sub_type]:
             self._run_sub(cb, *args, **kwargs)
+
+    def __cb_removed(self, ref, event_type):
+        '''
+        A weakly-referenced callback function was deleted; remove it from
+        the subscription list.
+        '''
+        self._subs[event_type].remove(ref)
 
     def subscribe(self, cb, event_type=None, run=True):
         '''Subscribe to events this signal group emits
@@ -133,10 +154,13 @@ class OphydObject(object):
         if event_type is None:
             event_type = self._default_sub
 
-        try:
-            self._subs[event_type].append(cb)
-        except KeyError:
+        if event_type not in self._subs:
             raise KeyError('Unknown event type: %s' % event_type)
+
+        remove_fcn = lambda cb, event_type=event_type: self.__cb_removed(cb, event_type)
+
+        proxy = weakref.proxy(cb, remove_fcn)
+        self._subs[event_type].append(proxy)
 
         if run:
             self._run_cached_sub(event_type, cb)
