@@ -2,6 +2,7 @@ from __future__ import print_function
 import signal
 import atexit
 import warnings
+import sys
 
 import epics
 
@@ -261,12 +262,12 @@ class SessionManager(object):
         Note: Registry can be changed during iteration
         '''
         if category is None:
-            for category, cat_items in list(self._registry.items()):
-                for name, obj in list(cat_items.items()):
+            for category, cat_items in list(sorted(self._registry.iteritems())):
+                for name, obj in list(sorted(cat_items.iteritems())):
                     yield category, obj
         else:
             cat_items = self._registry[category]
-            for name, obj in list(cat_items.items()):
+            for name, obj in list(sorted(cat_items.iteritems())):
                 yield obj
 
     def __getitem__(self, key):
@@ -338,3 +339,21 @@ class SessionManager(object):
                             caput=epics.caput,
                             camonitor=epics.camonitor,
                             cainfo=epics.cainfo))
+
+    def basic_config(self, f=sys.stdout):
+        main_cat = None
+
+        # TODO: individual signals from SignalGroups, etc. should not be
+        #       registered
+        for category, obj in self._all_objects():
+            if category != main_cat:
+                if main_cat is not None:
+                    print('', file=f)
+
+                print('# {}'.format(category), file=f)
+                main_cat = category
+
+            if obj.alias:
+                print('{0.alias} = {0!r}'.format(obj), file=f)
+            else:
+                print('{0.name} = {0!r}'.format(obj), file=f)
