@@ -96,7 +96,7 @@ class SessionManager(object):
 
     @property
     def persisting(self):
-        return self['_persisting']
+        return self.user_namespace['_persisting']
 
     @property
     def ipy_config(self):
@@ -128,20 +128,20 @@ class SessionManager(object):
             warnings.warn('StoreMagic.autorestore not enabled; variable persistence disabled')
 
             if name not in self:
-                self[name] = value
+                self.user_namespace[name] = value
                 self._logger.debug('Setting %s = %s' % (name, value))
-            return self[name]
+            return self.user_namespace[name]
 
         if name not in self:
             if desc is not None:
                 self._logger.debug('SessionManager could not find %s (%s).' % (name, desc))
                 self._logger.debug('Resetting %s to %s' % (name, value))
 
-            self[name] = value
+            self.user_namespace[name] = value
         else:
-            value = self[name]
+            value = self.user_namespace[name]
             if desc is not None:
-                self._logger.debug('Last %s = %s' % (desc, self[name]))
+                self._logger.debug('Last %s = %s' % (desc, self.user_namespace[name]))
 
         if name not in self.persisting:
             self.persisting.append(name)
@@ -220,7 +220,7 @@ class SessionManager(object):
         if self._run_engine is not None:
             self._run_engine.stop()
 
-        for pos in self._registry['positioners'].itervalues():
+        for pos in self._all_objects(category='positioners'):
             if pos.moving is True:
                 pos.stop()
                 self._logger.debug('Stopped %s' % pos)
@@ -233,28 +233,88 @@ class SessionManager(object):
         return self._registry['positioners'][pos]
 
     def get_current_scan_id(self):
-        return self['_scan_id']
+        return self.user_namespace['_scan_id']
 
     def get_next_scan_id(self):
         '''Increments the current scan_id by one and returns the value.
            Then, persists the scan_id using IPython's "%store" magics.
         '''
-        self['_scan_id'] += 1
-        return self['_scan_id']
+        self.user_namespace['_scan_id'] += 1
+        return self.user_namespace['_scan_id']
 
     def set_scan_id(self, value):
-        self['_scan_id'] = value
+        self.user_namespace['_scan_id'] = value
+
+    @property
+    def user_namespace(self):
+        '''
+        The IPython user namespace dictionary
+        '''
+        return self._ipy.user_ns
+
+    def _all_objects(self, category=None):
+        '''
+        All objects in the registry
+
+        Yields: (category_name, obj)
+
+        Note: Registry can be changed during iteration
+        '''
+        if category is None:
+            for category, cat_items in list(self._registry.items()):
+                for name, obj in list(cat_items.items()):
+                    yield category, obj
+        else:
+            cat_items = self._registry[category]
+            for name, obj in list(cat_items.items()):
+                yield obj
 
     def __getitem__(self, key):
-        '''Grab variables from the IPython namespace'''
-        return self._ipy.user_ns[key]
+        '''Grab objects from the registry, falling back to the IPython namespace'''
+        for category, obj in self._all_objects():
+            if obj.name == key:
+                return obj
+
+        try:
+            return self.user_namespace[key]
+        except KeyError:
+            raise KeyError('{!r} not in the registry or IPython namespace'.format(key))
 
     def __setitem__(self, key, value):
-        '''Set variables in the IPython namespace'''
-        self._ipy.user_ns[key] = value
+        '''Set the values of registry objects'''
+        obj = self[key]
+
+        # TODO something better?
+        obj.value = value
+
+    def __delitem__(self, key):
+        obj_found = False
+
+        for category, obj in self._all_objects():
+            if key == obj.name or obj is key:
+                del self._registry[category][obj.name]
+                obj_found = True
+
+        try:
+            del self.user_namespace[key]
+        except KeyError:
+            if not obj_found:
+                raise KeyError('{!r} not in the registry or IPython namespace'.format(key))
 
     def __contains__(self, key):
-        return key in self._ipy.user_ns
+        '''Checks if `key` is either an object name or in the IPython namespace'''
+        for category, obj in self._all_objects():
+            if obj.name == key:
+                return True
+
+        return key in self.user_namespace
+
+    def __len__(self):
+        return len(list(self._all_objects()))
+
+    def __iter__(self):
+        for category, obj in self._all_objects():
+            yield obj
 
     @property
     def cas(self):
