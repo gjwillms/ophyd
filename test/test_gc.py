@@ -9,7 +9,7 @@ import gc
 
 from ophyd.utils.epics_pvs import record_field
 from ophyd.controls import (EpicsSignal, EpicsMotor, PVPositioner)
-from ophyd.utils.weak_method import WeakMethodProxy
+from ophyd.utils.weak_method import FunctionProxy
 from ophyd import get_session_manager
 
 
@@ -48,13 +48,14 @@ class GCTests(unittest.TestCase):
         else:
             logger.debug('%r removed OK' % ref)
 
-    def test_weakmethodproxy(self):
+    def test_function_proxy(self):
         class A(object):
             def fcn(self):
                 return 1
 
+        # test instance methods
         a = A()
-        wmp = WeakMethodProxy(a.fcn, quiet=False)
+        wmp = FunctionProxy(a.fcn, quiet=False)
 
         self.assertEquals(wmp(), 1)
 
@@ -66,6 +67,22 @@ class GCTests(unittest.TestCase):
             pass
         else:
             self.fail('Method proxy did not raise referenceerror')
+
+        # test regular functions
+        def fcn(*args):
+            return sum(args)
+
+        wmp = FunctionProxy(fcn, quiet=False)
+        self.assertEquals(wmp(1, 2, 3), 6)
+
+        del fcn
+
+        try:
+            wmp(1, 2, 3)
+        except ReferenceError:
+            pass
+        else:
+            self.fail('Function proxy did not raise referenceerror')
 
     def test_epicssignal_wait_connected(self):
         pv_name = record_field(motor_rec, 'STOP')
@@ -88,17 +105,17 @@ class GCTests(unittest.TestCase):
         pv_name = record_field(motor_rec, 'STOP')
         test_signal = EpicsSignal(pv_name, name='test_signal')
 
-        def cb_fcn(**kwargs):
+        def cb_fcn(self, **kwargs):
             pass
 
-        test_signal.subscribe(cb_fcn)
+        test_signal.subscribe(cb_fcn, weak=True)
 
         # callback removal should also trigger removal from ophydobject list
         del cb_fcn
 
         sub = test_signal._default_sub
         self.assertEqual(len(test_signal._subs[sub]), 0,
-                         'WeakRef subscription not removed')
+                        'WeakRef subscription not removed')
 
         r = weakref.ref(test_signal)
         del session_mgr['test_signal']

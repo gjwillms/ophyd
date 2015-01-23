@@ -16,7 +16,7 @@ import epics
 
 from ..utils import (ReadOnlyError, TimeoutError, LimitError)
 from ..utils.epics_pvs import (get_pv_form, waveform_to_string)
-from ..utils.weak_method import (WeakMethodProxy, )
+from ..utils.weak_method import (FunctionProxy, )
 from .ophydobj import OphydObject
 
 
@@ -196,15 +196,15 @@ class EpicsSignal(Signal):
                         **kwargs)
 
         self._read_pv = epics.PV(read_pv, form=get_pv_form(),
-                                 callback=WeakMethodProxy(self._read_changed),
-                                 connection_callback=WeakMethodProxy(self._connected),
+                                 callback=FunctionProxy(self._read_changed),
+                                 connection_callback=FunctionProxy(self._connected),
                                  auto_monitor=auto_monitor,
                                  **pv_kw)
 
         if write_pv is not None:
             self._write_pv = epics.PV(write_pv, form=get_pv_form(),
-                                      callback=WeakMethodProxy(self._write_changed),
-                                      connection_callback=WeakMethodProxy(self._connected),
+                                      callback=FunctionProxy(self._write_changed),
+                                      connection_callback=FunctionProxy(self._connected),
                                       auto_monitor=auto_monitor,
                                       **pv_kw)
         elif rw:

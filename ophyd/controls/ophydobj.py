@@ -11,8 +11,10 @@ from __future__ import print_function
 
 import time
 import weakref
+import inspect
 
 from ..session import register_object
+from ..utils.weak_method import FunctionProxy
 
 
 class OphydObject(object):
@@ -135,7 +137,7 @@ class OphydObject(object):
         '''
         self._subs[event_type].remove(ref)
 
-    def subscribe(self, cb, event_type=None, run=True):
+    def subscribe(self, cb, event_type=None, run=True, weak=False):
         '''Subscribe to events this signal group emits
 
         See also :func:`clear_sub`
@@ -150,6 +152,11 @@ class OphydObject(object):
             defaults to SignalGroup._default_sub)
         run : bool, optional
             Run the callback now
+        weak: bool, optional
+            (Advanced option) Weakly reference the callback function.
+            If the object it's tied to is no longer referenced, except through this
+            subscription mechanism, it will be garbage collected and removed from the
+            subscription list.
         '''
         if event_type is None:
             event_type = self._default_sub
@@ -157,10 +164,16 @@ class OphydObject(object):
         if event_type not in self._subs:
             raise KeyError('Unknown event type: %s' % event_type)
 
-        remove_fcn = lambda cb, event_type=event_type: self.__cb_removed(cb, event_type)
-
-        proxy = weakref.proxy(cb, remove_fcn)
-        self._subs[event_type].append(proxy)
+        if inspect.isgeneratorfunction(cb):
+            raise ValueError('Callbacks cannot be generator functions (callback={!r})'.format(cb))
+        elif inspect.ismethod(cb) or weak:
+            # instance methods should be weakly referenced, or functions in
+            # which weak is specified
+            remove_fcn = lambda cb, event_type=event_type: self.__cb_removed(cb, event_type)
+            proxy = FunctionProxy(cb, remove_cb=remove_fcn)
+            self._subs[event_type].append(proxy)
+        else:
+            self._subs[event_type].append(cb)
 
         if run:
             self._run_cached_sub(event_type, cb)
