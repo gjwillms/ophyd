@@ -90,16 +90,34 @@ class OphydObject(object):
             self._run_sub(cb, *args, **self.__from_weakref_dict(kwargs))
 
     def __to_weakref_dict(self, d):
-        return {key: weakref.ref(value) if isinstance(value, OphydObject)
-                else value
-                for key, value in d.items()}
+        '''
+        Shallowly make references of values in a dictionary, ignoring types that
+        can't be made into weak references
+        '''
+        def get_ref(value):
+            try:
+                return weakref.ref(value)
+            except TypeError:
+                return value
+
+        return {key: get_ref(value) for key, value in d.items()}
 
     def __from_weakref_dict(self, d):
+        '''
+        De-reference the weakref dictionary from `__to_weakref_dict`
+        '''
         # TODO: objects that were gc'd will be None in kwargs for cached
         # callbacks
-        return {key: value() if isinstance(value, weakref.ReferenceType)
-                else value
-                for key, value in d.items()}
+
+        # NOTE: WeakValueDictionary didn't work as some values were floats, etc.
+
+        def get_ref(value):
+            if isinstance(value, weakref.ReferenceType):
+                return value()
+            else:
+                return value
+
+        return {key: get_ref(value) for key, value in d.items()}
 
     def _run_subs(self, *args, **kwargs):
         '''Run a set of subscription callbacks
