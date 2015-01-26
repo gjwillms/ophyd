@@ -103,6 +103,11 @@ class SessionManager(object):
         return self.user_namespace['_persisting']
 
     @property
+    def logger(self):
+        '''The session logger instance'''
+        return self._logger
+
+    @property
     def ipy_config(self):
         '''The IPython configuration'''
         return self._ipy.config
@@ -301,8 +306,6 @@ class SessionManager(object):
             if key == obj.name or obj is key:
                 del self._registry[category][obj.name]
 
-                obj._session = None
-                obj._ses_logger = None
                 obj_found = True
 
         try:

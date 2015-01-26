@@ -9,11 +9,16 @@
 
 from __future__ import print_function
 
-import time
+import logging
 import inspect
+import time
+import weakref
 
 from ..session import register_object
 from ..utils.weak_method import FunctionProxy
+
+
+logger = logging.getLogger(__name__)
 
 
 class OphydObject(object):
@@ -47,10 +52,16 @@ class OphydObject(object):
         self._subs = dict((getattr(self, sub), []) for sub in dir(self)
                           if sub.startswith('SUB_') or sub.startswith('_SUB_'))
         self._sub_cache = {}
-        self._ses_logger = None
+        self._session = None
+        self._logger = logging.getLogger(__name__)
 
-        if register:
-            self._register()
+        if register and name is not None:
+            register_object(self)
+
+    @property
+    def logger(self):
+        '''The logger assigned by the session manager'''
+        return self._logger
 
     def _run_sub(self, cb, *args, **kwargs):
         '''Run a single subscription callback
@@ -62,11 +73,11 @@ class OphydObject(object):
         '''
 
         try:
-            cb(*args, **kwargs)
+            return cb(*args, **kwargs)
         except Exception as ex:
             sub_type = kwargs['sub_type']
-            self._ses_logger.error('Subscription %s callback exception (%s)' %
-                                   (sub_type, self), exc_info=ex)
+            self.logger.error('Subscription %s callback exception (%r)' %
+                              (sub_type, self), exc_info=ex)
 
     def _run_cached_sub(self, sub_type, cb):
         '''Run a single subscription callback using the most recent
@@ -86,7 +97,7 @@ class OphydObject(object):
             pass
         else:
             # Cached kwargs includes sub_type
-            self._run_sub(cb, *args, **kwargs)
+            return self._run_sub(cb, *args, **kwargs)
 
     def _run_subs(self, *args, **kwargs):
         '''Run a set of subscription callbacks
@@ -98,20 +109,22 @@ class OphydObject(object):
         No exceptions are raised when the callback functions fail;
         they are merely logged with the session logger.
         '''
-        sub_type = kwargs['sub_type']
+        try:
+            sub_type = kwargs['sub_type']
+        except KeyError:
+            raise RuntimeError('Unable to run subscription; sub_type not specified')
 
         # Guarantee that the object will be in the kwargs
-        if 'obj' not in kwargs:
-            kwargs['obj'] = self
+        # (a weakref proxy to not create a reference cycle when caching this
+        #  callback for future subscriptions)
+        kwargs['obj'] = weakref.proxy(self)
 
-        # And if a timestamp key exists, but isn't filled -- supply it with
-        # a new timestamp
-        if 'timestamp' in kwargs and kwargs['timestamp'] is None:
+        # And if a timestamp isn't set, supply it with a new timestamp
+        if kwargs.get('timestamp', None) is None:
             kwargs['timestamp'] = time.time()
 
         # Shallow-copy the callback arguments for replaying the
         # callback at a later time (e.g., when a new subscription is made)
-
         self._sub_cache[sub_type] = (tuple(args), dict(kwargs))
 
         for cb in self._subs[sub_type]:
@@ -198,9 +211,12 @@ class OphydObject(object):
         else:
             self._subs[event_type].remove(cb)
 
-    def _register(self):
-        '''Register this object with the session'''
-        register_object(self)
+    def _registered(self, session, logger):
+        '''
+        Notification from the session manager confirming registration
+        '''
+        self._session = session
+        self._logger = logger
 
     @property
     def name(self):

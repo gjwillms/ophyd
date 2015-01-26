@@ -18,16 +18,16 @@ def get_session_manager():
     return SessionManager._instance
 
 
-def register_object(obj, set_vars=True):
+def register_object(obj, notify=True):
     '''Register the object with the current running ophyd session.
 
     Parameters
     ----------
     obj : object
         The object to register
-    set_vars : bool, optional
-        If set, obj._session and obj._ses_logger
-        are set to the current session and its associated logger.
+    notify : bool, optional
+        If set, the object will be notified of its registration with the session
+        manager.
 
     Returns
     -------
@@ -37,9 +37,8 @@ def register_object(obj, set_vars=True):
     ses = get_session_manager()
     ses_logger = ses.register(obj)
 
-    if set_vars:
-        obj._session = ses
-        obj._ses_logger = ses_logger
+    if notify:
+        obj._registered(ses, ses_logger)
 
     return ses
 
