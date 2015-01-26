@@ -9,14 +9,17 @@ from ophyd.controls import (EpicsSignal, Signal)
 from ophyd.utils.epics_pvs import record_field
 
 
+def callback(obj=None, sub_type=None, timestamp=None, value=None, **kwargs):
+    logger = config.logger
+    logger.info('[callback] [%s] (type=%s) value=%s' % (timestamp, sub_type, value))
+
+    # Test that the monitor dispatcher works (you cannot use channel access in
+    # callbacks without it)
+    signal = obj
+    logger.info('[callback] caget=%s' % signal.get())
+
+
 def test():
-    def callback(sub_type=None, timestamp=None, value=None, **kwargs):
-        logger.info('[callback] [%s] (type=%s) value=%s' % (timestamp, sub_type, value))
-
-        # Test that the monitor dispatcher works (you cannot use channel access in
-        # callbacks without it)
-        logger.info('[callback] caget=%s' % rw_signal.get())
-
     loggers = ('ophyd.controls.signal',
                'ophyd.session',
                )
@@ -46,22 +49,6 @@ def test():
                       separate_readback=True)
     logger.info('Python signal: %s' % testing1)
 
-    # NOTE: since rw_signal uses a function here for callbacks, it won't get
-    #       removed from the session manager (and its memory freed - that is,
-    #       garbage collected) unless it is explicitly deleted.
-    #
-    #       Try commenting out the del statement below and seeing how the
-    #       final 'remaining signals in session' line changes in the output.
-    #
-    # NOTE: testing0 and testing1, on the other hand, have no references to
-    #       other Python objects, so they will be removed when this function
-    #       returns
-    #
-    del config.session[rw_signal]
-
 
 if __name__ == '__main__':
     test()
-
-    config.logger.debug('Remaining signals in session: {}'
-                        .format(', '.join(obj.name for obj in config.session)))
