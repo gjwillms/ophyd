@@ -105,7 +105,7 @@ class GCTests(unittest.TestCase):
         pv_name = record_field(motor_rec, 'STOP')
         test_signal = EpicsSignal(pv_name, name='test_signal')
 
-        def cb_fcn(self, **kwargs):
+        def cb_fcn(**kwargs):
             pass
 
         test_signal.subscribe(cb_fcn, weak=True)
@@ -152,6 +152,11 @@ class GCTests(unittest.TestCase):
         time.sleep(1.0)
 
         r = weakref.ref(pos)
+
+        def cb_fcn(**kwargs):
+            pass
+
+        pos.subscribe(cb_fcn)
 
         del session_mgr['pos']
         del pos

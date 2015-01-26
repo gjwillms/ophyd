@@ -114,7 +114,7 @@ class Positioner(SignalGroup):
 
         self._started_moving = False
         self._moving = False
-        self._default_sub = None
+        self._default_sub = self.SUB_READBACK
         self._position = None
         self._timeout = kwargs.get('timeout', 0.0)
         self._trajectory = None

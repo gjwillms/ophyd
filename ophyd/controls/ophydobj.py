@@ -10,7 +10,6 @@
 from __future__ import print_function
 
 import time
-import weakref
 import inspect
 
 from ..session import register_object
@@ -87,37 +86,7 @@ class OphydObject(object):
             pass
         else:
             # Cached kwargs includes sub_type
-            self._run_sub(cb, *args, **self.__from_weakref_dict(kwargs))
-
-    def __to_weakref_dict(self, d):
-        '''
-        Shallowly make references of values in a dictionary, ignoring types that
-        can't be made into weak references
-        '''
-        def get_ref(value):
-            try:
-                return weakref.ref(value)
-            except TypeError:
-                return value
-
-        return {key: get_ref(value) for key, value in d.items()}
-
-    def __from_weakref_dict(self, d):
-        '''
-        De-reference the weakref dictionary from `__to_weakref_dict`
-        '''
-        # TODO: objects that were gc'd will be None in kwargs for cached
-        # callbacks
-
-        # NOTE: WeakValueDictionary didn't work as some values were floats, etc.
-
-        def get_ref(value):
-            if isinstance(value, weakref.ReferenceType):
-                return value()
-            else:
-                return value
-
-        return {key: get_ref(value) for key, value in d.items()}
+            self._run_sub(cb, *args, **kwargs)
 
     def _run_subs(self, *args, **kwargs):
         '''Run a set of subscription callbacks
@@ -143,7 +112,7 @@ class OphydObject(object):
         # Shallow-copy the callback arguments for replaying the
         # callback at a later time (e.g., when a new subscription is made)
 
-        self._sub_cache[sub_type] = (tuple(args), self.__to_weakref_dict(kwargs))
+        self._sub_cache[sub_type] = (tuple(args), dict(kwargs))
 
         for cb in self._subs[sub_type]:
             self._run_sub(cb, *args, **kwargs)
@@ -181,6 +150,10 @@ class OphydObject(object):
         '''
         if event_type is None:
             event_type = self._default_sub
+
+            if event_type is None:
+                raise ValueError('{} has no default subscription type. '
+                                 'event_type must be specified.'.format(self.__class__.__name__))
 
         if event_type not in self._subs:
             raise KeyError('Unknown event type: %s' % event_type)
