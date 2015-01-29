@@ -45,14 +45,14 @@ class PositionerTests(unittest.TestCase):
                            )
 
         def updated(value=None, **kwargs):
-            print('Updated to: %s' % value)
+            logger.debug('Updated to: %s' % value)
 
         cas_motor = CasMotor('m1', pos, server=server)
-        print(cas_motor.severity)
+        logger.debug('severity %s' % cas_motor.severity)
         record_name = cas_motor.full_pvname
         for i in range(2):
             epics.caput(record_name, i, wait=True)
-            print(pos.position)
+            logger.debug('position %s' % pos.position)
 
         repr(cas_motor)
         str(cas_motor)

@@ -1,5 +1,5 @@
 from __future__ import print_function
-
+import sys
 import logging
 import unittest
 import threading
@@ -85,10 +85,13 @@ class FakeEpicsPV(object):
                     self._value = random.choice(self.fake_values)
 
                 if self._value != last_value:
+                    sys.stdout.flush()
                     self.run_callbacks()
                     last_value = self._value
 
                 time.sleep(self._update_rate)
+
+            time.sleep(0.01)
 
     @property
     def lower_ctrl_limit(self):
@@ -422,7 +425,7 @@ class SignalTests(unittest.TestCase):
         self.assertEquals(signal.pvname, 'readpv')
         signal.value
 
-        signal._update_rate = 10
+        signal._update_rate = 2
         time.sleep(0.2)
 
         value = 10

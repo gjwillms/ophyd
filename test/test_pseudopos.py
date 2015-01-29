@@ -40,7 +40,7 @@ class PseudoPosTests(unittest.TestCase):
             return [-real0, -real1, -real2]
 
         def done(**kwargs):
-            print('** Finished moving (%s)' % (kwargs, ))
+            logger.debug('** Finished moving (%s)' % (kwargs, ))
 
         real0 = EpicsMotor(self.motor_recs[0], name='real0')
         real1 = EpicsMotor(self.motor_recs[1], name='real1')
@@ -141,7 +141,7 @@ class PseudoPosTests(unittest.TestCase):
             return -real0
 
         def done(**kwargs):
-            print('** Finished moving (%s)' % (kwargs, ))
+            logger.debug('** Finished moving (%s)' % (kwargs, ))
 
         real0 = EpicsMotor(self.motor_recs[0], name='real0')
         real1 = EpicsMotor(self.motor_recs[1], name='real1')
