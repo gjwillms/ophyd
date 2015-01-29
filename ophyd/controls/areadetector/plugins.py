@@ -751,6 +751,9 @@ def get_areadetector_plugin_class(prefix, suffix=''):
         type_rbv = ''.join([prefix, suffix, 'PluginType_RBV'])
         type_ = epics.caget(type_rbv)
 
+        if type_ is None:
+            raise ValueError('Plugin type PV does not exist: %s' % type_rbv)
+
         # HDF5 includes version number, remove it
         type_ = type_.split(' ')[0]
 

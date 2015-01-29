@@ -244,13 +244,13 @@ class ADBase(OphydObject):
         cls_ = self.__class__
 
         def default_match(prop_name, signal, doc):
-            print('Property: %s' % prop_name)
+            print('Property: %s' % prop_name, file=f)
             if signal.has_rbv:
-                print('  Signal: {0} / {0}_RBV'.format(signal.pv, signal.pv))
+                print('  Signal: {0} / {0}_RBV'.format(signal.pv, signal.pv), file=f)
             else:
-                print('  Signal: %s' % (signal.pv))
-            print('     Doc: %s' % doc)
-            print()
+                print('  Signal: %s' % (signal.pv), file=f)
+            print('     Doc: %s' % doc, file=f)
+            print('', file=f)
 
         if match_fcn is None:
             match_fcn = default_match
@@ -311,7 +311,7 @@ class ADBase(OphydObject):
         self.__sig_dict = None
 
     def read(self):
-        return self.report()
+        return self.report
 
     @property
     def report(self):
@@ -974,7 +974,8 @@ update_docstrings()
 def create_detector_stub(db_file, macros=None,
                          base_class=AreaDetector,
                          property_name_fcn=None,
-                         det_name=None):
+                         det_name=None,
+                         f=sys.stdout):
 
     '''Stub out a new AreaDetector directly from a database file'''
     # TODO imports here since this function needs to be moved
@@ -999,7 +1000,7 @@ def create_detector_stub(db_file, macros=None,
 
     # Get all the signals on the base class and remove those from
     # the list.
-    base_signals = base_class._all_adsignals()
+    base_signals = [sig for name, sig in base_class._all_adsignals()]
     base_recs = [sig.pv for sig in base_signals]
     base_recs.extend(['%s_RBV' % sig.pv for sig in base_signals
                       if sig.has_rbv])
@@ -1020,7 +1021,7 @@ def create_detector_stub(db_file, macros=None,
         det_name = os.path.splitext(det_name)[0]
         det_name = '%sDetector' % det_name
 
-    print('class %s(%s):' % (det_name, base_class.__name__))
+    print('class %s(%s):' % (det_name, base_class.__name__), file=f)
 
     def get_prop_name(pv):
         '''Get a property name from the camel-case AreaDetector PV name'''
@@ -1050,30 +1051,30 @@ def create_detector_stub(db_file, macros=None,
     if property_name_fcn is None:
         property_name_fcn = get_prop_name
 
-    print("    _html_docs = ['']")
+    print("    _html_docs = ['']", file=f)
     for record in sorted(records):
         prop_name = property_name_fcn(record)
 
-        print("    {} = ADSignal('{}'".format(prop_name, record), end='')
+        print("    {} = ADSignal('{}'".format(prop_name, record), end='', file=f)
         if record in rbv_only:
             # Readback only
-            print(", rw=False)")
+            print(", rw=False)", file=f)
         else:
             rbv_pv = '%s_RBV' % record
             has_rbv = rbv_pv in rbv_records
             if has_rbv:
-                print(", has_rbv=True)")
+                print(", has_rbv=True)", file=f)
             else:
-                print(")")
+                print(")", file=f)
 
 
-def stub_templates(path):
+def stub_templates(path, **kwargs):
     import os
 
     for fn in os.listdir(path):
         full_fn = os.path.join(path, fn)
         if fn.endswith('.db') or fn.endswith('.template'):
-            create_detector_stub(full_fn)
+            create_detector_stub(full_fn, **kwargs)
 
 
 if 0:
