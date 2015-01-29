@@ -161,6 +161,7 @@ class caServer(cas.caServer):
         if name not in self._pvs:
             raise ValueError('PV not in server')
 
+        pvi = self._pvs[name]
         del self._pvs[name]
         pvi._server = None
 

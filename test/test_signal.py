@@ -85,7 +85,6 @@ class FakeEpicsPV(object):
                     self._value = random.choice(self.fake_values)
 
                 if self._value != last_value:
-                    print('running callbacks for', self.pvname, self._value)
                     self.run_callbacks()
                     last_value = self._value
 

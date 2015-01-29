@@ -78,7 +78,7 @@ class CASTests(unittest.TestCase):
             pvs.value = value
             self.assertEquals(caget(pvc), value)
 
-        return pvc
+        server.remove_pv(pvs)
 
     def test_string(self):
         pv_name = get_pvname()
@@ -94,6 +94,12 @@ class CASTests(unittest.TestCase):
         get_value = pvc.get(use_monitor=False)
         logger.info('string pv: %s' % get_value)
         self.assertEquals(value, get_value)
+
+        server.remove_pv(pvs.name)
+
+    def test_start_twice(self):
+        server.start()
+        server.running
 
     def test_enum(self):
         pv_name = get_pvname()
