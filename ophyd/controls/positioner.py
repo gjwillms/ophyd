@@ -108,19 +108,34 @@ class Positioner(SignalGroup):
     SUB_DONE = 'done_moving'
     SUB_READBACK = 'readback'
     _SUB_REQ_DONE = '_req_done'  # requested move finished subscription
+    _default_sub = SUB_READBACK
 
     def __init__(self, *args, **kwargs):
-        SignalGroup.__init__(self, *args, **kwargs)
-
         self._started_moving = False
-        self._moving = False
-        self._default_sub = None
-        self._position = None
-        self._timeout = kwargs.get('timeout', 0.0)
+        self._moving = bool(kwargs.pop('moving', False))
+        self._position = kwargs.pop('position', 0.0)
+        self._timeout = kwargs.pop('timeout', 0.0)
         self._trajectory = None
         self._trajectory_idx = None
         self._followed = []
-        self._egu = kwargs.get('egu', '')
+        self._egu = kwargs.pop('egu', '')
+
+        SignalGroup.__init__(self, *args, **kwargs)
+
+    def _repr_info(self):
+        info = SignalGroup._repr_info(self)
+        info.append(('position', self.position))
+
+        if self.moving:
+            info.append(('moving', self.moving))
+
+        if self._timeout > 0.0:
+            info.append(('timeout', self._timeout))
+
+        if self._egu:
+            info.append(('egu', self._egu))
+
+        return info
 
     def set_trajectory(self, traj):
         '''Set the trajectory of the motion
@@ -197,6 +212,14 @@ class Positioner(SignalGroup):
         self._run_subs(sub_type=self._SUB_REQ_DONE, success=False)
         self._reset_sub(self._SUB_REQ_DONE)
 
+        if self.__class__ is Positioner:
+            # When not subclassed, Positioner acts as a soft positioner,
+            # immediately 'moving' to the target position when requested.
+            self._started_moving = True
+            self._moving = False
+
+        ret = None
+
         if wait:
             t0 = time.time()
 
@@ -226,7 +249,15 @@ class Positioner(SignalGroup):
             self.subscribe(status._finished,
                            event_type=self._SUB_REQ_DONE, run=False)
 
-            return status
+            ret = status
+
+        if self.__class__ is Positioner:
+            # When not subclassed, Positioner acts as a soft positioner,
+            # so motion completes just after it starts.
+            self._set_position(position)
+            self._done_moving()
+
+        return ret
 
     def _done_moving(self, timestamp=None, value=None, **kwargs):
         '''Call when motion has completed.  Runs SUB_DONE subscription.'''
@@ -285,11 +316,16 @@ class EpicsMotor(Positioner):
         The record to use
     '''
 
-    def __init__(self, record, **kwargs):
+    def __init__(self, record=None, **kwargs):
+        if record is None:
+            raise ValueError('EPICS record name must be specified')
+
         self._record = record
 
-        name = kwargs.pop('name', record)
-        Positioner.__init__(self, name=name, **kwargs)
+        # TODO should we do this by default?
+        # name = kwargs.pop('name', record)
+        # Positioner.__init__(self, name=name, **kwargs)
+        Positioner.__init__(self, **kwargs)
 
         signals = [EpicsSignal(self.field_pv('RBV'), rw=False, alias='_user_readback'),
                    EpicsSignal(self.field_pv('VAL'), alias='_user_setpoint',
@@ -363,7 +399,17 @@ class EpicsMotor(Positioner):
 
     def _repr_info(self):
         info = Positioner._repr_info(self)
-        info.append(('record', self._record))
+
+        # Remove signals from the repr list, they are generated automatically
+        info = [(name, value) for name, value in info
+                if name not in ('signals', 'egu')]
+
+        info.insert(0, ('record', self._record))
+
+        egu = self.egu
+        if egu:
+            info.append(('egu', egu))
+
         return info
 
     def check_value(self, pos):
@@ -436,7 +482,7 @@ class PVPositioner(Positioner):
         (low_limit, high_limit)
     '''
 
-    def __init__(self, setpoint, readback=None,
+    def __init__(self, setpoint=None, readback=None,
                  act=None, act_val=1,
                  stop=None, stop_val=1,
                  done=None, done_val=1,
@@ -444,6 +490,9 @@ class PVPositioner(Positioner):
                  settle_time=0.05,
                  limits=None,
                  **kwargs):
+
+        if setpoint is None:
+            raise ValueError('The setpoint PV must be specified')
 
         Positioner.__init__(self, **kwargs)
 
@@ -453,6 +502,7 @@ class PVPositioner(Positioner):
         self._put_complete = bool(put_complete)
         self._settle_time = float(settle_time)
 
+        self._readback = None
         self._actuate = None
         self._stop = None
         self._done = None
@@ -632,14 +682,21 @@ class PVPositioner(Positioner):
         self._set_position(value)
 
     def stop(self):
+        if self._stop is None:
+            raise RuntimeError('Stop PV has not been set')
+
         self._stop.put(self._stop_val, wait=False)
 
         Positioner.stop(self)
 
-    # TODO: this will fail if no readback is provided to initializer
     @property
     def report(self):
-        return {self._name: self.position, 'pv': self._readback.pvname}
+        if self._readback:
+            return {self._name: self.position,
+                    'pv': self._readback.pvname}
+        else:
+            return {self._name: self._setpoint.value,
+                    'pv': self._setpoint.pvname}
 
     @property
     def limits(self):
@@ -647,6 +704,10 @@ class PVPositioner(Positioner):
 
     def _repr_info(self):
         info = Positioner._repr_info(self)
+
+        # Remove signals from the repr list, they are generated automatically
+        info = [(name, value) for name, value in info
+                if name not in ('signals', )]
 
         info.append(('setpoint', self._setpoint.pvname))
         if self._readback:
@@ -664,4 +725,5 @@ class PVPositioner(Positioner):
         info.append(('put_complete', self._put_complete))
         info.append(('settle_time', self._settle_time))
         info.append(('limits', self._limits))
+        info.append(('moving', self.moving))
         return info

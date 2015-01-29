@@ -45,6 +45,9 @@ class FakeEpicsPV(object):
         FakeEpicsPV._pv_idx += 1
         self._idx = FakeEpicsPV._pv_idx
 
+        self._update = True
+
+        self._lock = threading.Lock()
         self._thread = threading.Thread(target=self._update_loop)
         self._thread.setDaemon(True)
         self._thread.start()
@@ -74,10 +77,19 @@ class FakeEpicsPV(object):
             self._connection_callback(pvname=self._pvname, conn=True, pv=self)
 
         self._connected = True
+        last_value = None
+
         while True:
-            self._value = random.choice(self.fake_values)
-            self.run_callbacks()
-            time.sleep(self._update_rate)
+            with self._lock:
+                if self._update:
+                    self._value = random.choice(self.fake_values)
+
+                if self._value != last_value:
+                    print('running callbacks for', self.pvname, self._value)
+                    self.run_callbacks()
+                    last_value = self._value
+
+                time.sleep(self._update_rate)
 
     @property
     def lower_ctrl_limit(self):
@@ -151,7 +163,8 @@ class FakeEpicsPV(object):
     def __repr__(self):
         return '<FakePV %s value=%s>' % (self._pvname, self.value)
 
-    def get(self, as_string=False, use_numpy=False):
+    def get(self, as_string=False, use_numpy=False,
+            use_monitor=False):
         if as_string:
             if isinstance(self.value, list):
                 return list(self.value)
@@ -164,7 +177,10 @@ class FakeEpicsPV(object):
 
     def put(self, value, wait=False, timeout=30.0,
             use_complete=False, callback=None, callback_data=None):
-        self._value = value
+
+        with self._lock:
+            self._update = False
+            self._value = value
 
 
 class FakeEpicsWaveform(FakeEpicsPV):
