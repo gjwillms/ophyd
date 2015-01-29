@@ -98,7 +98,6 @@ class CasFunction(object):
             try:
                 self._add_fcn(name)
             except Exception as ex:
-                # print('Failed to add function: %s (%s)' % (name, ex))
                 logger.error('Failed to add function: %s (%s)' % (name, ex), exc_info=ex)
                 del self._functions[name]
 
@@ -132,7 +131,7 @@ class CasFunction(object):
             proc_pv = CasPV(''.join((fcn_prefix, self._process_pv)), 0,
                             written_cb=info['wrapped'])
         else:
-            pv_kw['written_cb'] = info['wrapped']
+            pv_kw['written_cb'] = info['pv_callback']
             proc_pv = None
 
         retval_pv = CasPV(''.join((fcn_prefix, self._retval_pv)),
@@ -269,7 +268,8 @@ class CasFunction(object):
 
         info = self._functions[name]
         ret = dict((param, pv.full_pvname)
-                   for param, pv in info['param_dict'].items())
+                   for param, pv in info['param_dict'].items()
+                   if pv is not None)
 
         return ret
 
@@ -287,6 +287,11 @@ class CasFunction(object):
         def wrapped_async(**cas_kw):
             self._run_async(name)
             raise casAsyncCompletion()
+
+        @functools.wraps(fcn)
+        def pv_callback(pv=None, value=None, **kwargs):
+            pv.value = value
+            return wrapped()
 
         if self._async:
             wrapped = wrapped_async
@@ -313,6 +318,10 @@ class CasFunction(object):
         info['defaults'] = [default for param, default in parameters]
         info['function'] = fcn
         info['wrapped'] = wrapped
+
+        if not self._use_process:
+            info['pv_callback'] = pv_callback
+
         self._add_fcn(name)
 
         wrapped_sync.wrapper = self

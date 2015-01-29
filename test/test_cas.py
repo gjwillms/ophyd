@@ -124,7 +124,8 @@ class CASTests(unittest.TestCase):
         caget(pvc)
 
         def written_to_async(timestamp=None, value=None,
-                             status=None, severity=None):
+                             status=None, severity=None,
+                             pv=None, **kwargs):
             raise casAsyncCompletion
 
         def finished(**kwargs):

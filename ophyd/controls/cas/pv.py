@@ -387,7 +387,8 @@ class CasPV(cas.casPV):
         gdd.getTimeStamp(timestamp)
         value = gdd.get()
         status, severity = self.check_alarm(value)
-        return dict(timestamp=timestamp,
+        return dict(pv=self,
+                    timestamp=timestamp,
                     value=value,
                     status=status,
                     severity=severity)
@@ -449,8 +450,8 @@ class CasPV(cas.casPV):
         # Set the value and post the event
         self.value = value
 
-    def written_to(self, timestamp=None, value=None,
-                   status=None, severity=None):
+    def written_to(self, timestamp=None, value=None, status=None, severity=None,
+                   pv=None, **kwargs):
         '''Default callback for when the PV is written to
 
         Raises
@@ -475,7 +476,8 @@ class CasPV(cas.casPV):
         '''Cause the written-to callback to be fired'''
 
         try:
-            ret = self._written_cb(timestamp=self._timestamp,
+            ret = self._written_cb(pv=self,
+                                   timestamp=self._timestamp,
                                    value=self._value,
                                    status=self._status,
                                    severity=self._severity)

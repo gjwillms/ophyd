@@ -108,6 +108,12 @@ def bool_func(bool_one=False, bool_two=True):
     return bool(bool_one or bool_two)
 
 
+@CasFunction(use_process=False)
+def no_process(a=0, b=0.0, **kwargs):
+    '''Don't use process PV, value updates when parameters are written to'''
+    return a + b
+
+
 # Can't use positional arguments:
 try:
     @CasFunction(prefix='test:')
@@ -142,7 +148,7 @@ def test_async():
 
     sig_a.value = a
     sig_b.value = b
-    sig_proc.value = 1
+    sig_proc.put(1, wait=True)
 
     time.sleep(0.1)
     logger.info('result through channel access: %r' % sig_ret.value)
@@ -283,12 +289,45 @@ def test_bool():
     logger.info('called normally: %r' % bool_func(bool_one=one, bool_two=two))
 
 
+def test_no_process():
+    logger.info('no-process synchronous function')
+    pvnames = no_process.get_pvnames()
+
+    sig_a = EpicsSignal(pvnames['a'])
+    sig_b = EpicsSignal(pvnames['b'])
+    # updates automatically without process
+    # sig_proc = EpicsSignal(pvnames['process'])
+    sig_ret = EpicsSignal(pvnames['retval'])
+
+    a, b = 3.0, 4.0
+    print('a')
+    sig_a.value = a
+    time.sleep(0.1)
+    print('b')
+    sig_b.value = b
+    time.sleep(0.2)
+    logger.info('result through channel access: %r' % sig_ret.value)
+    logger.info('called normally: %r' % no_process(a=a, b=b))
+
+    a, b = 5.0, 6.0
+    sig_a.value = a
+    time.sleep(0.1)
+    sig_b.value = b
+
+    time.sleep(0.2)
+    logger.info('result through channel access: %r' % sig_ret.value)
+    logger.info('called normally: %r' % no_process(a=a, b=b))
+
+
 def test():
     loggers = ('ophyd.controls.cas',
                'ophyd.controls.cas.function',
                )
 
     config.setup_loggers(loggers)
+
+    test_no_process()
+    return
 
     test_async()
     test_sync()
