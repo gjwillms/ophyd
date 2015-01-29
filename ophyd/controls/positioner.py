@@ -361,8 +361,10 @@ class EpicsMotor(Positioner):
         except KeyboardInterrupt:
             self.stop()
 
-    def __repr__(self):
-        return self._get_repr(['record={!r}'.format(self._record)])
+    def _repr_info(self):
+        info = Positioner._repr_info(self)
+        info.append(('record', self._record))
+        return info
 
     def check_value(self, pos):
         '''Check that the position is within the soft limits'''
@@ -643,21 +645,23 @@ class PVPositioner(Positioner):
     def limits(self):
         return tuple(self._limits)
 
-    def __repr__(self):
-        repr = ['setpoint={0._setpoint.pvname!r}'.format(self)]
-        if self._readback:
-            repr.append('readback={0._readback.pvname!r}'.format(self))
-        if self._actuate:
-            repr.append('act={0._actuate.pvname!r}'.format(self))
-            repr.append('act_val={0._act_val!r}'.format(self))
-        if self._stop:
-            repr.append('stop={0._stop.pvname!r}'.format(self))
-            repr.append('stop_val={0._stop_val!r}'.format(self))
-        if self._done:
-            repr.append('done={0._done.pvname!r}'.format(self))
-            repr.append('done_val={0._done_val!r}'.format(self))
-        repr.append('put_complete={0._put_complete!r}'.format(self))
-        repr.append('settle_time={0._settle_time!r}'.format(self))
-        repr.append('limits={0._limits!r}'.format(self))
+    def _repr_info(self):
+        info = Positioner._repr_info(self)
 
-        return self._get_repr(repr)
+        info.append(('setpoint', self._setpoint.pvname))
+        if self._readback:
+            info.append(('readback', self._readback.pvname))
+        if self._actuate:
+            info.append(('act', self._actuate.pvname))
+            info.append(('act_val', self._act_val))
+        if self._stop:
+            info.append(('stop', self._stop.pvname))
+            info.append(('stop_val', self._stop_val))
+        if self._done:
+            info.append(('done', self._done.pvname))
+            info.append(('done_val', self._done_val))
+
+        info.append(('put_complete', self._put_complete))
+        info.append(('settle_time', self._settle_time))
+        info.append(('limits', self._limits))
+        return info

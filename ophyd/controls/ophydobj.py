@@ -10,8 +10,12 @@
 from __future__ import print_function
 
 import time
+import logging
 
 from ..session import register_object
+
+
+logger = logging.getLogger(__name__)
 
 
 class OphydObject(object):
@@ -45,7 +49,7 @@ class OphydObject(object):
         self._subs = dict((getattr(self, sub), []) for sub in dir(self)
                           if sub.startswith('SUB_') or sub.startswith('_SUB_'))
         self._sub_cache = {}
-        self._ses_logger = None
+        self._ses_logger = logging.getLogger(__name__)
 
         if register:
             self._register()
@@ -190,21 +194,19 @@ class OphydObject(object):
         pass
 
     def __repr__(self):
-        return self._get_repr()
+        info = self._repr_info()
+        info = ', '.join('{}={!r}'.format(key, value) for key, value in info)
+        return '{}({})'.format(self.__class__.__name__, info)
 
-    def _get_repr(self, info=None):
-        repr = []
-
+    def _repr_info(self):
+        info = []
         if self._name:
-            repr.append('name={0._name!r}'.format(self))
-
-        if info:
-            repr.extend(info)
+            info.append(('name', self._name))
 
         if self._alias:
-            repr.append('alias={0._alias!r}'.format(self))
+            info.append(('alias', self._alias))
 
-        return '{}({})'.format(self.__class__.__name__, ', '.join(repr))
+        return info
 
     @property
     def report(self):
@@ -216,3 +218,7 @@ class OphydObject(object):
             Pertinent information from the subclass is included
         '''
         return {}
+
+    def __copy__(self):
+        info = dict(self._repr_info())
+        return self.__class__(**info)

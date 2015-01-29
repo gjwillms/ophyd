@@ -72,12 +72,11 @@ class EpicsScaler(SignalGroup):
         for sig in signals:
             self.add_signal(sig)
 
-    def __repr__(self):
-        repr = ['record={0._record!r}'.format(self),
-                'numchan={0._numchan!r}'.format(self),
-                ]
-
-        return self._get_repr(repr)
+    def _repr_info(self):
+        info = SignalGroup._repr_info(self)
+        info.append(('record', self._record))
+        info.append(('numchan', self._numchan))
+        return info
 
     @property
     def record(self):

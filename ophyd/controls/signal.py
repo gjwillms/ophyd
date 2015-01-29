@@ -67,11 +67,14 @@ class Signal(OphydObject):
         self._timestamp = timestamp
         self._setpoint_ts = setpoint_ts
 
-    def __repr__(self):
-        repr = ['value={0.value!r}'.format(self)]
+    def _repr_info(self):
+        info = OphydObject._repr_info(self)
+        info.append(('value', self.value))
+
         if self._separate_setpoint:
-            repr.append('setpoint={0.setpoint!r}'.format(self))
-        return self._get_repr(repr)
+            info.append(('setpoint', self.setpoint))
+
+        return info
 
     @property
     def setpoint_ts(self):
@@ -272,17 +275,19 @@ class EpicsSignal(Signal):
         except AttributeError:
             return None
 
-    def __repr__(self):
-        repr = ['read_pv={0._read_pv.pvname!r}'.format(self)]
+    def _repr_info(self):
+        info = Signal._repr_info(self)
+        info.append(('read_pv', self._read_pv.pvname))
         if self._write_pv is not None:
-            repr.append('write_pv={0._write_pv.pvname!r}'.format(self))
+            info.append(('write_pv', self._write_pv.pvname))
 
-        repr.append('rw={0._rw!r}, string={0._string!r}'.format(self))
-        repr.append('limits={0._check_limits!r}'.format(self))
-        repr.append('put_complete={0._put_complete!r}'.format(self))
-        repr.append('pv_kw={0._pv_kw!r}'.format(self))
-        repr.append('auto_monitor={0._auto_monitor!r}'.format(self))
-        return self._get_repr(repr)
+        info.append(('rw', self._rw))
+        info.append(('string', self._string))
+        info.append(('limits', self._check_limits))
+        info.append(('put_complete', self._put_complete))
+        info.append(('pv_kw', self._pv_kw))
+        info.append(('auto_monitor', self._auto_monitor))
+        return info
 
     def _connected(self, pvname=None, conn=None, pv=None, **kwargs):
         '''Connection callback from PyEpics'''
@@ -468,16 +473,13 @@ class SignalGroup(OphydObject):
             for signal in signals:
                 self.add_signal(signal)
 
-    def __repr__(self):
-        repr = []
+    def _repr_info(self):
+        info = OphydObject._repr_info(self)
 
         if self._signals:
-            repr.append('signals={0._signals!r}'.format(self))
+            info.append(('signals', self._signals))
 
-        if self._alias:
-            repr.append('alias={0._alias!r}'.format(self))
-
-        return self._get_repr(repr)
+        return info
 
     def add_signal(self, signal, prop_name=None):
         '''Add a signal to the group.

@@ -37,8 +37,10 @@ class PseudoSingle(Positioner):
         self._master.subscribe(self._sub_proxy, event_type=self.SUB_DONE)
         self._master.subscribe(self._sub_proxy_idx, event_type=self.SUB_READBACK)
 
-    def __repr__(self):
-        return self._get_repr(['idx={0._idx!r}'.format(self)])
+    def _repr_info(self):
+        info = Positioner._repr_info(self)
+        info.append(('idx', self._idx))
+        return info
 
     def _sub_proxy(self, obj=None, **kwargs):
         '''Master callbacks such as start of motion, motion finished,
@@ -159,15 +161,14 @@ class PseudoPositioner(Positioner):
         if not self._pseudo_names or not self._real:
             raise ValueError('Must have at least 1 positioner and pseudo-positioner')
 
-    def __repr__(self):
-        repr = ['positioners={0._real!r}'.format(self),
-                'concurrent={0._concurrent!r}'.format(self),
-                'pseudo={0._pseudo_names!r}'.format(self),
-                'forward={0._calc_forward!r}'.format(self),
-                'reverse={0._calc_reverse!r}'.format(self),
-                ]
-
-        return self._get_repr(repr)
+    def _repr_info(self):
+        info = Positioner._repr_info(self)
+        info.append(('positioners', self._real))
+        info.append(('concurrent', self._concurrent))
+        info.append(('pseudo', self._pseudo_names))
+        info.append(('forward', self._calc_forward))
+        info.append(('reverse', self._calc_reverse))
+        return info
 
     def stop(self):
         for pos in self._real:
