@@ -70,9 +70,11 @@ class Signal(OphydObject):
     def _repr_info(self):
         info = OphydObject._repr_info(self)
         info.append(('value', self.value))
+        info.append(('timestamp', self.timestamp))
 
         if self._separate_setpoint:
             info.append(('setpoint', self.setpoint))
+            info.append(('setpoint_ts', self.setpoint_ts))
 
         return info
 
