@@ -27,31 +27,61 @@ class Signal(OphydObject):
 
     Parameters
     ----------
-    separate_readback : bool, optional
+    separate_setpoint : bool, optional
         If the readback value isn't coming from the same source as the setpoint
         value, set this to True.
     value : any, optional
         The initial value
     setpoint : any, optional
         The initial setpoint value
+    timestamp : float, optional
+        The timestamp associated with the initial value. Defaults to the current
+        local time.
+    setpoint_ts : float, optional
+        The timestamp associated with the initial setpoint value. Defaults to
+        the current local time.
     '''
     SUB_SETPOINT = 'setpoint'
     SUB_VALUE = 'value'
+    _default_sub = SUB_VALUE
 
-    def __init__(self, separate_readback=False, value=None, setpoint=None, **kwargs):
-        self._default_sub = self.SUB_VALUE
+    def __init__(self, separate_setpoint=False, value=None, setpoint=None,
+                 timestamp=None, setpoint_ts=None,
+                 **kwargs):
         OphydObject.__init__(self, **kwargs)
+
+        self._separate_setpoint = bool(separate_setpoint)
+
+        if not self._separate_setpoint and setpoint is None:
+            setpoint = value
 
         self._setpoint = setpoint
         self._readback = value
 
-        self._separate_readback = separate_readback
+        if setpoint_ts is None:
+            setpoint_ts = time.time()
+
+        if timestamp is None:
+            timestamp = time.time()
+
+        self._timestamp = timestamp
+        self._setpoint_ts = setpoint_ts
 
     def __repr__(self):
         repr = ['value={0.value!r}'.format(self)]
-        if self._separate_readback:
+        if self._separate_setpoint:
             repr.append('setpoint={0.setpoint!r}'.format(self))
         return self._get_repr(repr)
+
+    @property
+    def setpoint_ts(self):
+        '''Timestamp of the setpoint value'''
+        return self._setpoint_ts
+
+    @property
+    def timestamp(self):
+        '''Timestamp of the readback value'''
+        return self._timestamp
 
     def get_setpoint(self):
         '''Get the value of the setpoint'''
@@ -72,21 +102,23 @@ class Signal(OphydObject):
             Allow callbacks (subscriptions) to happen
         force : bool, optional
             Skip checking the value first
+        timestamp : float, optional
+            Associate a known timestamp (generated if not specified)
         '''
         if not force:
             self.check_value(value)
 
         old_value = self._setpoint
         self._setpoint = value
+        self._setpoint_ts = kwargs.pop('timestamp', time.time())
 
-        if not self._separate_readback:
+        if not self._separate_setpoint:
             self._set_readback(value)
 
         if allow_cb:
-            timestamp = kwargs.pop('timestamp', time.time())
             self._run_subs(sub_type=Signal.SUB_SETPOINT,
                            old_value=old_value, value=value,
-                           timestamp=timestamp, **kwargs)
+                           timestamp=self.setpoint_ts, **kwargs)
 
     # getters/setters of properties are defined as lambdas so subclasses
     # can override them without redefining the property
@@ -108,12 +140,12 @@ class Signal(OphydObject):
         '''Set the readback value internally'''
         old_value = self._readback
         self._readback = value
+        self._timestamp = kwargs.pop('timestamp', time.time())
 
         if allow_cb:
-            timestamp = kwargs.pop('timestamp', time.time())
             self._run_subs(sub_type=Signal.SUB_VALUE,
                            old_value=old_value, value=value,
-                           timestamp=timestamp, **kwargs)
+                           timestamp=self._timestamp, **kwargs)
 
     def read(self):
         '''Put the status of the signal into a simple dictionary format
@@ -123,10 +155,10 @@ class Signal(OphydObject):
         -------
             dict
         '''
-        if self._separate_readback:
+        if self._separate_setpoint:
             return {'alias': self.alias,
                     'setpoint': self.setpoint,
-                    'readback': self.readback,
+                    'readback': self.value,
                     }
         else:
             return {'alias': self.alias,
@@ -180,7 +212,7 @@ class EpicsSignal(Signal):
         self._pv_kw = pv_kw
         self._auto_monitor = auto_monitor
 
-        separate_readback = False
+        separate_setpoint = False
 
         if not rw:
             write_pv = None
@@ -188,10 +220,10 @@ class EpicsSignal(Signal):
             if write_pv == read_pv:
                 write_pv = None
             else:
-                separate_readback = True
+                separate_setpoint = True
 
         name = kwargs.pop('name', read_pv)
-        Signal.__init__(self, separate_readback=separate_readback, name=name,
+        Signal.__init__(self, separate_setpoint=separate_setpoint, name=name,
                         **kwargs)
 
         self._read_pv = epics.PV(read_pv, form=get_pv_form(),
@@ -230,10 +262,7 @@ class EpicsSignal(Signal):
     @property
     def pvname(self):
         '''The readback PV name'''
-        try:
-            return self._read_pv.pvname
-        except AttributeError:
-            return None
+        return self._read_pv.pvname
 
     @property
     def setpoint_pvname(self):
@@ -269,7 +298,12 @@ class EpicsSignal(Signal):
 
     @property
     def limits(self):
-        pv = self._write_pv
+        if self._write_pv is None:
+            # Read-only, but readback could have associated limits
+            pv = self._read_pv
+        else:
+            pv = self._write_pv
+
         pv.get_ctrlvars()
         return (pv.lower_ctrl_limit, pv.upper_ctrl_limit)
 
@@ -288,10 +322,11 @@ class EpicsSignal(Signal):
         ------
         ValueError
         '''
-        if value is None:
+        if self._write_pv is None:
+            raise ReadOnlyError('Read-only EPICS signal')
+        elif value is None:
             raise ValueError('Cannot write None to epics PVs')
-
-        if not self._check_limits:
+        elif not self._check_limits:
             return
 
         low_limit, high_limit = self.limits
@@ -302,31 +337,36 @@ class EpicsSignal(Signal):
             raise LimitError('Value {} outside of range: [{}, {}]'.format(value,
                                                                           low_limit, high_limit))
 
-    # TODO: monitor updates self._readback - this shouldn't be necessary
-    #       ... but, there should be a mode of operation without using
-    #           monitor updates, e.g., for large arrays
-    def get(self, as_string=None, **kwargs):
-        if as_string is None:
-            as_string = self._string
+    def _get(self, pv, **kwargs):
+        as_string = kwargs.pop('as_string', self._string)
 
-        ret = self._read_pv.get(as_string=as_string, **kwargs)
+        ret = pv.get(as_string=as_string, **kwargs)
 
         if as_string:
             return waveform_to_string(ret)
         else:
             return ret
 
-    def get_setpoint(self, **kwargs):
-        '''Get the setpoint value (use only if the setpoint PV and the readback
-        PV differ)
+    def get(self, **kwargs):
+        '''Get the signal value (the readback)
 
-        Keyword arguments are passed on to epics.PV.get()
+        Keyword arguments are passed onto epics.PV.get(), so you can use
+        `as_string`, `count`, etc.
         '''
-        if kwargs or self._setpoint is None:
-            setpoint = self._write_pv.get(**kwargs)
-            return self._fix_type(setpoint)
-        else:
-            return self._setpoint
+        return self._get(self._read_pv, **kwargs)
+
+    def get_setpoint(self, **kwargs):
+        '''Get the setpoint value
+
+        Should only be used if the setpoint PV and the readback PV differ.
+
+        Keyword arguments are passed onto epics.PV.get(), so you can use
+        `as_string`, `count`, etc.
+        '''
+        if self._write_pv is None:
+            raise ReadOnlyError('Read-only EPICS signal')
+
+        return self._get(self._write_pv, **kwargs)
 
     def put(self, value, force=False, **kwargs):
         '''Using channel access, set the write PV to `value`.
@@ -506,11 +546,15 @@ class SignalGroup(OphydObject):
 
     @property
     def pvname(self):
-        return [signal.pvname for signal in self._signals]
+        return [signal.pvname if hasattr(signal, 'pvname')
+                else None
+                for signal in self._signals]
 
     @property
     def setpoint_pvname(self):
-        return [signal.setpoint_pvname for signal in self._signals]
+        return [signal.setpoint_pvname if hasattr(signal, 'setpoint_pvname')
+                else None
+                for signal in self._signals]
 
     @property
     def report(self):

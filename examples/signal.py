@@ -43,7 +43,7 @@ def test():
 
     # Even one with a separate setpoint/readback value:
     sig = Signal(name='testing', value=10, setpoint=2,
-                 separate_readback=True)
+                 separate_setpoint=True)
     logger.info('Python signal: %s' % sig)
 
 if __name__ == '__main__':

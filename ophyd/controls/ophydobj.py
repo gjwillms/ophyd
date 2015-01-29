@@ -205,3 +205,14 @@ class OphydObject(object):
             repr.append('alias={0._alias!r}'.format(self))
 
         return '{}({})'.format(self.__class__.__name__, ', '.join(repr))
+
+    @property
+    def report(self):
+        '''Report of current object information
+
+        Returns
+        -------
+        info : dict, or list of dictionaries
+            Pertinent information from the subclass is included
+        '''
+        return {}
