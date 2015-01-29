@@ -38,6 +38,8 @@ class EpicsScaler(SignalGroup):
 
         Eventually need to provide PR1..16 -- preset counts too.
         '''
+
+        # TODO: if name is None, this will fail
         signals = [EpicsSignal(self.field_pv('CNT'),
                                alias='_count_ctl',
                                name=''.join([self.name, '_cnt'])),

@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class FakeEpicsPV(object):
     _connect_delay = (0.05, 0.1)
-    _update_rate = 0.05
+    _update_rate = 0.1
     fake_values = (0.1, 0.2, 0.3)
     _pv_idx = 0
 
@@ -221,6 +221,7 @@ class FakePVTests(unittest.TestCase):
 def setUpModule():
     global server
 
+    epics._PV = epics.PV
     epics.PV = FakeEpicsPV
 
 
@@ -228,6 +229,7 @@ def tearDownModule():
     epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
+    epics.PV = epics._PV
 
 
 class SignalTests(unittest.TestCase):
