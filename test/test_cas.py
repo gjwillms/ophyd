@@ -53,7 +53,7 @@ def client_pv(pvname):
 
 def get_pvname():
     server._pv_idx += 1
-    return 'cas_test_pv_%d' % server._pv_idx
+    return '__TESTING__cas_test_pv_%d' % server._pv_idx
 
 
 class CASTests(unittest.TestCase):
@@ -190,7 +190,5 @@ class CASTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    fmt = '%(asctime)-15s [%(levelname)s] %(message)s'
-    logging.basicConfig(format=fmt, level=logging.DEBUG)
-
-    unittest.main()
+    from . import run_test
+    run_test()

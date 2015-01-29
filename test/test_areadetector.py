@@ -69,7 +69,5 @@ class ADTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    fmt = '%(asctime)-15s [%(levelname)s] %(message)s'
-    logging.basicConfig(format=fmt, level=logging.DEBUG)
-
-    unittest.main()
+    from . import run_test
+    run_test()

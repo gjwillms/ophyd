@@ -39,7 +39,8 @@ class SignalTests(unittest.TestCase):
     real_scaler = False
 
     def test_temp_scaler(self):
-        sca = scaler.EpicsScaler(scalers[0])
+        # TODO fix
+        scaler.EpicsScaler(scalers[0])
 
     def test_signal_separate(self):
         sca = scaler.EpicsScaler(scalers[0], name='scaler')
@@ -80,7 +81,5 @@ class SignalTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    fmt = '%(asctime)-15s [%(levelname)s] %(message)s'
-    logging.basicConfig(format=fmt, level=logging.DEBUG)
-
-    unittest.main()
+    from . import run_test
+    run_test()
