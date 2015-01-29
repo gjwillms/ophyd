@@ -103,7 +103,7 @@ class CasMotor(CasRecord):
         self._update_status(moving=self._pos.moving)
 
     def written_to(self, timestamp=None, value=None,
-                   status=None, severity=None):
+                   status=None, severity=None, pv=None, **kwargs):
         '''[CAS callback] CA client requested a move by writing to this record
         (or .VAL)
         '''
