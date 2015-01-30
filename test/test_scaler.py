@@ -9,12 +9,15 @@ import epics
 
 from ophyd.controls import scaler
 from ophyd.utils import enum
+from ophyd.session import get_session_manager
 from .test_signal import FakeEpicsPV
 
 ScalerMode = enum(ONE_SHOT=0, AUTO_COUNT=1)
 
 server = None
 logger = logging.getLogger(__name__)
+session = get_session_manager()
+
 
 REAL_SCALER = False
 scalers = ['XF:23ID2-ES{Sclr:1}']
@@ -29,7 +32,8 @@ def setUpModule():
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
     epics.PV = epics._PV
 
     logger.debug('Cleaning up')

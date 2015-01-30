@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-import logging
 import unittest
+import logging
 import time
 
 import numpy as np
@@ -9,25 +9,27 @@ from numpy.testing import assert_array_equal
 
 import epics
 
-from ophyd.controls.cas import (caServer, CasPV, CasRecord,
-                                Limits, logger, casAsyncCompletion)
-
+from ophyd.controls.cas import (CasPV, CasRecord, Limits, casAsyncCompletion)
 from ophyd.utils.errors import alarms
 from ophyd.utils.epics_pvs import record_field
-
+from ophyd.session import get_session_manager
+from . import get_caserver
 
 server = None
+logger = logging.getLogger(__name__)
+session = get_session_manager()
 
 
 def setUpModule():
     global server
 
-    server = caServer('__TESTING__')
+    server = get_caserver()
     server._pv_idx = 0
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
     server.cleanup()
@@ -53,7 +55,7 @@ def client_pv(pvname):
 
 def get_pvname():
     server._pv_idx += 1
-    return '__TESTING__cas_test_pv_%d' % server._pv_idx
+    return '%s__cas_test_pv_%d' % (server.prefix, server._pv_idx)
 
 
 class CASTests(unittest.TestCase):

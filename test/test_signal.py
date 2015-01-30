@@ -17,10 +17,11 @@ import epics
 from ophyd.controls.signal import (Signal, SignalGroup,
                                    EpicsSignal)
 from ophyd.utils import ReadOnlyError
-
+from ophyd.session import get_session_manager
 
 server = None
 logger = logging.getLogger(__name__)
+session = get_session_manager()
 
 
 class FakeEpicsPV(object):
@@ -223,13 +224,15 @@ class FakePVTests(unittest.TestCase):
 
 def setUpModule():
     global server
+    global session
 
     epics._PV = epics.PV
     epics.PV = FakeEpicsPV
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
     epics.PV = epics._PV

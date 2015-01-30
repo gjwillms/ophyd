@@ -10,10 +10,12 @@ from numpy.testing import assert_array_equal
 import epics
 
 from ophyd.controls.signal import EpicsSignal
-from ophyd.controls.cas import (CasFunction, caServer)
+from ophyd.controls.cas import CasFunction
+from ophyd.session import get_session_manager
 
 server = None
 logger = logging.getLogger(__name__)
+session = get_session_manager()
 
 
 @CasFunction()
@@ -87,11 +89,13 @@ def no_process(a=0, b=0.0, **kwargs):
 
 def setUpModule():
     global server
-    server = caServer('OPHYD_TEST_CAS_')
+    from . import get_caserver
+    server = get_caserver()
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
     server.cleanup()
@@ -268,7 +272,7 @@ class CASFuncTest(unittest.TestCase):
         self.assertEquals(sig_ret.value, 8.0)
 
     def test_pvi(self):
-        pvi = no_process.get_pv('a')
+        no_process.get_pv('a')
 
 
 if __name__ == '__main__':

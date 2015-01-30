@@ -1,28 +1,30 @@
 from __future__ import print_function
 
-import time
 import logging
 import unittest
 
-
 import epics
 from ophyd.controls.positioner import (EpicsMotor, PVPositioner)
-from ophyd.controls.cas import (CasMotor, caServer)
+from ophyd.controls.cas import CasMotor
+from ophyd.session import get_session_manager
 
 server = None
 logger = logging.getLogger(__name__)
+session = get_session_manager()
 
 
 def setUpModule():
     global server
 
     # epics.PV = FakeEpicsPV
-    server = caServer('__TESTING__')
+    from . import get_caserver
+    server = get_caserver()
     server._pv_idx = 0
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
 

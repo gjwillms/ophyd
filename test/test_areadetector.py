@@ -9,9 +9,11 @@ import epics
 
 from ophyd.controls.areadetector.detectors import (AreaDetector, stub_templates)
 from ophyd.controls.areadetector.plugins import get_areadetector_plugin
+from ophyd.session import get_session_manager
 
 server = None
 logger = logging.getLogger(__name__)
+session = get_session_manager()
 
 
 def setUpModule():
@@ -19,7 +21,8 @@ def setUpModule():
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
 
 class ADTest(unittest.TestCase):

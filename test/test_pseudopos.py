@@ -18,7 +18,8 @@ def setUpModule():
 
 
 def tearDownModule():
-    epics.ca.destroy_context()
+    if __name__ == '__main__':
+        epics.ca.destroy_context()
 
     logger.debug('Cleaning up')
 
