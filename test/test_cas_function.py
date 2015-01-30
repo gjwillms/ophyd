@@ -7,21 +7,36 @@ import time
 import numpy as np
 from numpy.testing import assert_array_equal
 
-import epics
-
 from ophyd.controls.signal import EpicsSignal
 from ophyd.controls.cas import CasFunction
 from ophyd.session import get_session_manager
 
 server = None
 logger = logging.getLogger(__name__)
-session = get_session_manager()
 
 
+# async_func declared prior to creation of caserver, but will be added once the
+# server is instantiated
 @CasFunction()
 def async_func(a=0, b=0.0, **kwargs):
     time.sleep(0.5)
     return a + b
+
+
+try:
+    async_func.get_pvnames()
+except RuntimeError:  # not added to a server yet
+    pass
+
+
+# When attached, the pv 'async_func:a' will overlap with the real async_func
+@CasFunction(prefix='async_func:')
+def dupe_pv_on_attach(a=1):
+    pass
+
+
+# Creating the session will instantiate the server
+session = get_session_manager()
 
 
 @CasFunction(async=False, prefix='test:sync:')
@@ -51,9 +66,18 @@ def array_input_func(value=np.array([1., 2., 3.], dtype=np.float)):
     return np.average(value)
 
 
-@CasFunction()
+def failed_cb(*args, **kwargs):
+    logger.info('Failed callback called (%s %s)' % (args, kwargs))
+
+
+@CasFunction(failed_cb=failed_cb)
 def failure_func():
-    raise ValueError('failed, somehow')
+    raise ValueError('failure test (expected)')
+
+
+@CasFunction(failed_cb=failed_cb)
+def bad_retval():
+    return 'A_string_is_not_a_float'
 
 
 @CasFunction(return_value=True)
@@ -79,6 +103,15 @@ try:
         pass
 except ValueError:
     logger.debug('(Failed as expected)')
+
+try:
+    @CasFunction(prefix='async_func:')
+    def dupe_pv(a=1):
+        pass
+except ValueError:
+    logger.debug('(Failed as expected)')
+else:
+    raise ValueError('Duplicate PV did not fail?')
 
 
 @CasFunction(use_process=False)
@@ -267,6 +300,18 @@ class CASFuncTest(unittest.TestCase):
 
     def test_pvi(self):
         no_process.get_pv('a')
+
+    def test_bad_retval(self):
+        pvnames = bad_retval.get_pvnames()
+
+        sig_proc = EpicsSignal(pvnames['process'])
+        sig_ret = EpicsSignal(pvnames['retval'])
+        sig_proc.value = 1
+
+        time.sleep(0.2)
+
+        # import sys
+        # print('bad retval value', sig_ret.value, file=sys.stderr)
 
 
 from . import main

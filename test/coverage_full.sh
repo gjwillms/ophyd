@@ -36,12 +36,13 @@ if [ ! -d "doc" ]; then
     exit 1
 fi
 
-COVERAGE_HTML=doc/coverage
+COVERAGE_HTML=$script_path/doc/coverage
 rm -rf $COVERAGE_HTML
 mkdir $COVERAGE_HTML
 nosetests --with-coverage --cover-erase --cover-html --cover-html-dir=$COVERAGE_HTML \
           --cover-tests --cover-package=ophyd -v \
-          --where=test -v
-          # --tests=test.test_cliapi
+          --where=test
+          # --tests=test.test_cas_function
 
 view setup.py -c ":Coveragepy report"
+# view ophyd/controls/cas/function.py -c ":Coveragepy report"
