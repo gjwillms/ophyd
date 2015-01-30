@@ -318,7 +318,7 @@ class CasPV(cas.casPV):
         while self._updating:
             try:
                 self.scan()
-            except:
+            except Exception:
                 self._updating = False
                 raise
 
@@ -569,7 +569,7 @@ class CasPV(cas.casPV):
         '''Set the gdd value to (some attribute of this instance)'''
         try:
             value = getattr(self, attr)
-        except:
+        except Exception:
             pass
         else:
             gdd.put(value)
@@ -578,7 +578,7 @@ class CasPV(cas.casPV):
         '''Set the gdd value to (some part of the limits)'''
         try:
             value = getattr(self.limits, attr)
-        except:
+        except Exception:
             pass
         else:
             gdd.put(value)

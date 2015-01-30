@@ -188,13 +188,13 @@ class CasFunction(object):
         if status_pv.server is not None:
             try:
                 status_pv.value = msg
-            except:
+            except Exception:
                 pass
 
         if failed_cb is not None:
             try:
                 failed_cb(name=name, ex=ex, kwargs=kwargs)
-            except:
+            except Exception:
                 pass
         else:
             logger.error(msg, exc_info=ex)

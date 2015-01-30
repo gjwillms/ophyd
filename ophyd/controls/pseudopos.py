@@ -349,7 +349,7 @@ class PseudoPositioner(Positioner):
         '''Get either a single pseudo or real positioner by name'''
         try:
             return self.pseudos[key]
-        except:
+        except KeyError:
             return self.reals[key]
 
     def __setitem__(self, key, value):
@@ -360,5 +360,5 @@ class PseudoPositioner(Positioner):
         try:
             self.__getitem__(key)
             return True
-        except:
+        except Exception:
             return False

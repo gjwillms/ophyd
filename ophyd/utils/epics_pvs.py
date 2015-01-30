@@ -240,7 +240,7 @@ def get_pv_form():
                 version = version[:version.index('rc')]
 
             version_tuple = tuple(int(v) for v in version.split('.'))
-        except:
+        except Exception:
             return None
 
         return version_tuple

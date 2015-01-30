@@ -287,7 +287,7 @@ class ADBase(OphydObject):
         def safe_getattr(obj, attr):
             try:
                 return getattr(obj, attr)
-            except:
+            except Exception:
                 return None
 
         if self.__sig_dict is None:

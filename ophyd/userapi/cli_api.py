@@ -382,7 +382,7 @@ def log_pos_mov(id=None, dry_run=False, positioners=None, **kwargs):
         try:
             if not dry_run:
                 stat.append(value.move(newpos, wait=False))
-        except:
+        except Exception:
             print('{}[!!] Unable to move positioner {}'
                   .format(tc.Red, tc.Normal))
         else:
@@ -438,7 +438,7 @@ def log_pos_diff(id=None, positioners=None, **kwargs):
             diff.append(value.position - oldpos[key])
             pos.append(value)
             values.append(value.position)
-        except:
+        except Exception:
             print('{}[!!] Unable to compare positioner {}{}'
                   .format(tc.Red, key, tc.Normal))
 
@@ -475,7 +475,7 @@ def logbook_to_objects(id=None, **kwargs):
     try:
         obj = eval(prop['objects'])
         val = eval(prop['values'])
-    except:
+    except Exception:
         raise RuntimeError('Unable to create objects from log entry')
 
     objects = {o.name: o for o in obj}
