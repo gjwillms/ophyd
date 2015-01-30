@@ -44,6 +44,11 @@ class ADTest(unittest.TestCase):
         det.find_signal('a', use_re=True, case_sensitive=True, f=StringIO())
         det.signals
         det.report
+
+        det.image_mode = 'Single'
+        det.image1.enable = 'Enable'
+        det.array_callbacks = 'Enable'
+
         try:
             det.read()
         except Exception as ex:
@@ -57,9 +62,9 @@ class ADTest(unittest.TestCase):
         plugin = get_areadetector_plugin(self.prefix, suffix='TIFF1:',
                                          detector=det)
 
-        plugin.detector
+        plugin.file_template = '%s%s_%3.3d.tif'
         try:
-            plugin.get_filenames(check=False)
+            plugin.get_filenames(check=True)
         except (RuntimeError, ValueError):
             pass
 

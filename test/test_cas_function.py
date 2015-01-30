@@ -29,12 +29,6 @@ except RuntimeError:  # not added to a server yet
     pass
 
 
-# When attached, the pv 'async_func:a' will overlap with the real async_func
-@CasFunction(prefix='async_func:')
-def dupe_pv_on_attach(a=1):
-    pass
-
-
 # Creating the session will instantiate the server
 session = get_session_manager()
 

@@ -240,12 +240,12 @@ def tearDownModule():
 
 class SignalTests(unittest.TestCase):
     def test_signal_separate(self):
-        self.signal_test(True)
+        self.signal_t(True)
 
     def test_signal_unified(self):
-        self.signal_test(False)
+        self.signal_t(False)
 
-    def signal_test(self, separate):
+    def signal_t(self, separate):
         start_t = time.time()
         setpoint_t = start_t + 1
 
