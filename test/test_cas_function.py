@@ -21,7 +21,6 @@ session = get_session_manager()
 @CasFunction()
 def async_func(a=0, b=0.0, **kwargs):
     time.sleep(0.5)
-
     return a + b
 
 
@@ -94,12 +93,7 @@ def setUpModule():
 
 
 def tearDownModule():
-    if __name__ == '__main__':
-        epics.ca.destroy_context()
-
-    logger.debug('Cleaning up')
-    server.cleanup()
-    logger.info('Done')
+    pass
 
 
 class CASFuncTest(unittest.TestCase):
@@ -275,6 +269,6 @@ class CASFuncTest(unittest.TestCase):
         no_process.get_pv('a')
 
 
-if __name__ == '__main__':
-    from . import run_test
-    run_test()
+from . import main
+is_main = (__name__ == '__main__')
+main(is_main)

@@ -84,6 +84,6 @@ class SignalTests(unittest.TestCase):
         str(sca)
 
 
-if __name__ == '__main__':
-    from . import run_test
-    run_test()
+from . import main
+is_main = (__name__ == '__main__')
+main(is_main)

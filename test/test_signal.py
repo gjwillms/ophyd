@@ -480,6 +480,6 @@ class SignalTests(unittest.TestCase):
         self.assertEquals(signal.setpoint_ts, sig_copy.setpoint_ts)
 
 
-if __name__ == '__main__':
-    from . import run_test
-    run_test()
+from . import main
+is_main = (__name__ == '__main__')
+main(is_main)

@@ -28,12 +28,7 @@ def setUpModule():
 
 
 def tearDownModule():
-    if __name__ == '__main__':
-        epics.ca.destroy_context()
-
-    logger.debug('Cleaning up')
-    server.cleanup()
-    logger.info('Done')
+    pass
 
 
 def caget(pvc, **kwargs):
@@ -191,6 +186,6 @@ class CASTests(unittest.TestCase):
         self.assertEquals(caget(egu_pvc), 'testing')
 
 
-if __name__ == '__main__':
-    from . import run_test
-    run_test()
+from . import main
+is_main = (__name__ == '__main__')
+main(is_main)
