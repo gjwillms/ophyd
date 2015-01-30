@@ -70,10 +70,10 @@ def check_alarm(base_pv, stat_field='STAT', severity_field='SEVR',
     ------
     AlarmError (MinorAlarmError, MajorAlarmError)
     """
-    stat_pv = '%s.%s' % (base_pv, stat_field)
-    severity_pv = '%s.%s' % (base_pv, severity_field)
+    stat_pv = record_field(base_pv, stat_field)
+    severity_pv = record_field(base_pv, severity_field)
     if reason_field is not None:
-        reason_pv = '%s.%s' % (base_pv, reason_field)
+        reason_pv = record_field(base_pv, reason_field)
     reason = None
 
     severity = epics.caget(severity_pv)

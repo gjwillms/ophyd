@@ -1,4 +1,7 @@
 '''PV names for tests'''
+import os
+
+epics_base = os.environ.get('EPICS_BASE', '/usr/lib/epics')
 
 motor_recs = ['XF:31IDA-OP{Tbl-Ax:X1}Mtr',
               'XF:31IDA-OP{Tbl-Ax:X2}Mtr',
