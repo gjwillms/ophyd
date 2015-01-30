@@ -27,15 +27,21 @@ fail() {
 
 [ -z "$motor_val" ] && fail "Motor IOC"
 [ -z "$areadet_val" ] && fail "areaDetector example IOC"
-[ -d "doc" ] || (echo "Unable to find doc path" && exit 1)
 
 cd $script_path/..
+
+if [ ! -d "doc" ]; then
+    echo "Unable to find doc path"
+    echo "`pwd`/doc"
+    exit 1
+fi
 
 COVERAGE_HTML=doc/coverage
 rm -rf $COVERAGE_HTML
 mkdir $COVERAGE_HTML
 nosetests --with-coverage --cover-erase --cover-html --cover-html-dir=$COVERAGE_HTML \
-          --cover-tests --cover-package=ophyd --where=test -v
-          # --cover-tests --cover-package=ophyd --tests=test.test_signal -v
+          --cover-tests --cover-package=ophyd -v \
+          --where=test -v
+          # --tests=test.test_cliapi
 
 view setup.py -c ":Coveragepy report"
